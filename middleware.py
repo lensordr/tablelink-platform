@@ -11,8 +11,13 @@ class TenantMiddleware(BaseHTTPMiddleware):
             request.url.path in ["/favicon.ico", "/robots.txt", "/apple-touch-icon.png", "/test"]):
             return await call_next(request)
         
-        # Skip for setup routes
-        if request.url.path.startswith("/setup"):
+        # Skip for setup routes and global pages
+        if (request.url.path.startswith("/setup") or 
+            request.url.path in ["/onboarding", "/admin"] or
+            request.url.path.startswith("/admin/") or 
+            request.url.path in ["/onboarding", "/admin", "/admin/"] or
+            request.url.path.startswith("/onboarding") or
+            request.url.path.startswith("/admin/")):
             return await call_next(request)
         
         try:

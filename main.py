@@ -103,6 +103,10 @@ async def admin_dashboard(request: Request):
 async def onboarding_page(request: Request):
     return templates.TemplateResponse("onboarding.html", {"request": request})
 
+@app.get("/onboarding", response_class=HTMLResponse)
+async def onboarding_page_alt(request: Request):
+    return templates.TemplateResponse("onboarding.html", {"request": request})
+
 @app.post("/onboard")
 async def create_restaurant(
     restaurant_name: str = Form(...),

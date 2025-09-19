@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu - Table {{ table_number }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ {{ restaurant_name }}</h1>
+        <div id="table-info">
+            <h2>📍 Table <span id="table-number">{{ table_number or 'Not specified' }}</span></h2>
+            <p style="color: #718096; margin-top: 0.5rem;">Welcome! Browse our menu and place your order</p>
+        </div>
+
+        <div id="menu-section" style="display: none;">
+            <h3>🍴 Our Menu</h3>
+            <div id="menu-items"></div>
+            
+            <div id="order-section">
+                <h3>🛒 Your Order</h3>
+                <div id="order-items"></div>
+                <div id="total">Total: $0.00</div>
+                
+                <form id="order-form">
+                    <input type="hidden" id="table-number-input" name="table_number" value="{{ table_number }}">
+                    <div class="form-group">
+                        <label for="table-code">Enter 3-digit table code:</label>
+                        <input type="text" id="table-code" name="code" maxlength="3" pattern="[0-9]{3}" required>
+                    </div>
+                    <button type="submit" id="place-order-btn" disabled>Place Order</button>
+                </form>
+                
+                <div id="checkout-section" style="display: none;">
+                    <h3>💳 Request Checkout</h3>
+                    <div class="tip-section">
+                        <h4>💰 Select Tip Amount</h4>
+                        <div class="tip-buttons">
+                            <button type="button" onclick="selectTip(0)" class="tip-btn" data-tip="0">No Tip</button>
+                            <button type="button" onclick="selectTip(10)" class="tip-btn" data-tip="10">10%</button>
+                            <button type="button" onclick="selectTip(15)" class="tip-btn" data-tip="15">15%</button>
+                            <button type="button" onclick="selectTip(20)" class="tip-btn" data-tip="20">20%</button>
+                            <button type="button" onclick="selectCustomTip()" class="tip-btn">Custom</button>
+                        </div>
+                        <input type="number" id="custom-tip" placeholder="Enter custom tip amount" style="display: none; margin-top: 10px; padding: 8px; width: 100%;">
+                        <div id="tip-display" style="margin-top: 10px; font-weight: bold;">Selected Tip: $0.00</div>
+                    </div>
+                    <div class="checkout-buttons">
+                        <button type="button" onclick="requestCheckout('cash')" class="checkout-btn cash-btn" disabled id="cash-btn">💵 Pay with Cash</button>
+                        <button type="button" onclick="requestCheckout('card')" class="checkout-btn card-btn" disabled id="card-btn">💳 Pay with Card</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script src="/static/client.js"></script>
+</body>
+</html>

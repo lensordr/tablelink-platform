@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trial Expired - TableLink</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .expired-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .expired-icon {
+            font-size: 4em;
+            color: #e53e3e;
+            margin-bottom: 20px;
+        }
+        .expired-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .expired-message {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .upgrade-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .plan-card {
+            background: #f8f9fa;
+            padding: 30px 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            flex: 1;
+            max-width: 200px;
+        }
+        .plan-card.recommended {
+            border-color: #007bff;
+            background: #f0f8ff;
+        }
+        .plan-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .plan-price {
+            font-size: 1.5em;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .plan-features {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .contact-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .support-email {
+            font-size: 1.1em;
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="expired-container">
+        <div class="expired-icon">⏰</div>
+        <h1 class="expired-title">Trial Period Expired</h1>
+        <p class="expired-message">
+            Your 5-day free trial for <strong>{{ restaurant_name }}</strong> has expired.
+            <br><br>
+            To continue using TableLink, please upgrade to one of our paid plans below.
+        </p>
+        
+        <div class="upgrade-options">
+            <div class="plan-card">
+                <div class="plan-name">Basic</div>
+                <div class="plan-price">€49/month</div>
+                <div class="plan-features">
+                    • Order Management<br>
+                    • Basic Analytics<br>
+                    • Menu Management
+                </div>
+            </div>
+            
+            <div class="plan-card recommended">
+                <div class="plan-name">Professional</div>
+                <div class="plan-price">€79/month</div>
+                <div class="plan-features">
+                    • Everything in Basic<br>
+                    • Advanced Analytics<br>
+                    • Export Reports<br>
+                    • Priority Support
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact-info">
+            <p><strong>Ready to Upgrade?</strong></p>
+            <p>Contact our sales team to reactivate your account:</p>
+            <div class="support-email">lens.ordr@gmail.com</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied - TableLink</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .access-denied-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .error-icon {
+            font-size: 4em;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        .error-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .contact-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .support-email {
+            font-size: 1.1em;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .back-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .back-link:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="access-denied-container">
+        <div class="error-icon">🚫</div>
+        <h1 class="error-title">Access Denied</h1>
+        <p class="error-message">
+            This restaurant account is currently inactive or has been removed from our system.
+            <br><br>
+            If you believe this is an error, please contact our support team for assistance.
+        </p>
+        
+        <div class="contact-info">
+            <p><strong>Need Help?</strong></p>
+            <p>Contact our support team:</p>
+            <div class="support-email">lens.ordr@gmail.com</div>
+        </div>
+        
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+</body>
+</html>

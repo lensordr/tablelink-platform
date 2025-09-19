@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Restaurant - TableLink</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .onboard-container { max-width: 600px; margin: 50px auto; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid #e1e5e9; border-radius: 6px; font-size: 16px; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #007bff; }
+        .btn-create { width: 100%; padding: 15px; background: #007bff; color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: 600; cursor: pointer; }
+        .btn-create:hover { background: #0056b3; }
+        .btn-create:disabled { background: #6c757d; cursor: not-allowed; }
+        .success-message { background: #d4edda; color: #155724; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
+        .error-message { background: #f8d7da; color: #721c24; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
+        .credentials-box { background: #f8f9fa; padding: 20px; border-radius: 6px; margin-top: 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="onboard-container">
+        <a href="/admin" class="back-link">← Back to Admin Dashboard</a>
+        
+        <h1>🍽️ Create New Restaurant</h1>
+        <p>Set up a new restaurant on the TableLink platform</p>
+        
+        <div id="message" style="display: none;"></div>
+        
+        <form id="onboard-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="restaurant_name">Restaurant Name *</label>
+                <input type="text" id="restaurant_name" name="restaurant_name" required 
+                       placeholder="e.g., Mario's Italian Kitchen">
+            </div>
+            
+            <div class="form-group">
+                <label for="admin_email">Admin Email *</label>
+                <input type="email" id="admin_email" name="admin_email" required 
+                       placeholder="admin@restaurant.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="admin_username">Admin Username *</label>
+                <input type="text" id="admin_username" name="admin_username" required 
+                       placeholder="admin" minlength="3" maxlength="20">
+            </div>
+            
+            <div class="form-group">
+                <label for="admin_password">Admin Password *</label>
+                <input type="password" id="admin_password" name="admin_password" required 
+                       placeholder="Choose a secure password" minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="table_count">Number of Tables *</label>
+                <input type="number" id="table_count" name="table_count" required 
+                       min="1" max="100" value="10" placeholder="10">
+            </div>
+            
+            <div class="form-group">
+                <label for="plan_type">Plan Type</label>
+                <select id="plan_type" name="plan_type">
+                    <option value="trial">🎯 Trial (Free - 5 days)</option>
+                    <option value="basic">📊 Basic (€49/month)</option>
+                    <option value="professional">💼 Professional (€79/month)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="menu_file">Menu File (Optional)</label>
+                <input type="file" id="menu_file" name="menu_file" accept=".xlsx,.xls">
+                <small style="color: #666; font-size: 14px;">Upload Excel file with columns: Name, Ingredients, Price, Category</small>
+            </div>
+            
+            <button type="submit" class="btn-create" id="create-btn">
+                Create Restaurant
+            </button>
+        </form>
+        
+        <div id="success-details" style="display: none;">
+            <div class="credentials-box">
+                <h3>🎉 Restaurant Created Successfully!</h3>
+                <p><strong>Restaurant:</strong> <span id="created-name"></span></p>
+                <p><strong>Subdomain:</strong> <span id="created-subdomain"></span></p>
+                <p><strong>Login URL:</strong> <a id="created-url" href="#" target="_blank"></a></p>
+                <p><strong>Admin Username:</strong> <code id="created-username"></code></p>
+                <p><strong>Admin Password:</strong> <code id="created-password"></code></p>
+                <p style="margin-top: 15px; color: #856404; background: #fff3cd; padding: 10px; border-radius: 4px;">
+                    ⚠️ Save these credentials! The password will not be shown again.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('onboard-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const createBtn = document.getElementById('create-btn');
+            const messageDiv = document.getElementById('message');
+            
+            createBtn.disabled = true;
+            createBtn.textContent = 'Creating Restaurant...';
+            
+            try {
+                const formData = new FormData(this);
+                
+                const response = await fetch('/onboard', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message
+                    messageDiv.className = 'success-message';
+                    messageDiv.textContent = result.message;
+                    messageDiv.style.display = 'block';
+                    
+                    // Hide form and show credentials
+                    this.style.display = 'none';
+                    
+                    document.getElementById('created-name').textContent = result.restaurant_name;
+                    document.getElementById('created-subdomain').textContent = result.subdomain;
+                    document.getElementById('created-url').textContent = result.login_url;
+                    document.getElementById('created-url').href = result.login_url;
+                    document.getElementById('created-username').textContent = result.admin_username;
+                    document.getElementById('created-password').textContent = result.admin_password;
+                    
+                    document.getElementById('success-details').style.display = 'block';
+                } else {
+                    messageDiv.className = 'error-message';
+                    messageDiv.textContent = result.error || 'Failed to create restaurant';
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                messageDiv.className = 'error-message';
+                messageDiv.textContent = 'Network error: ' + error.message;
+                messageDiv.style.display = 'block';
+            } finally {
+                createBtn.disabled = false;
+                createBtn.textContent = 'Create Restaurant';
+            }
+        });
+    </script>
+</body>
+</html>

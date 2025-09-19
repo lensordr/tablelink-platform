@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TablePulse Setup</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .setup-container { background: #f9f9f9; padding: 30px; border-radius: 10px; }
+        h1 { color: #333; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #007bff; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+        button:hover { background: #0056b3; }
+        .info { background: #e7f3ff; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <h1>🏪 Welcome to TablePulse</h1>
+        <div class="info">
+            <strong>First Time Setup</strong><br>
+            Configure your restaurant details and create your admin account.
+        </div>
+        
+        <form id="setupForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="restaurant_name">Restaurant Name:</label>
+                <input type="text" id="restaurant_name" name="restaurant_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="admin_username">Admin Username:</label>
+                <input type="text" id="admin_username" name="admin_username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="admin_password">Admin Password:</label>
+                <input type="password" id="admin_password" name="admin_password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="menu_file">Menu File (Optional):</label>
+                <input type="file" id="menu_file" name="menu_file" accept=".xlsx,.xls,.pdf">
+                <small>Excel format: Name | Ingredients | Price | Category</small>
+            </div>
+            
+            <button type="submit">Complete Setup</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('setupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/setup', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                let result;
+                try {
+                    result = await response.json();
+                } catch (jsonError) {
+                    console.error('JSON parse error:', jsonError);
+                    const text = await response.text();
+                    console.error('Response text:', text);
+                    alert('Setup failed: Invalid response format');
+                    return;
+                }
+                
+                if (response.ok) {
+                    alert('Setup completed successfully!');
+                    window.location.href = result.redirect || '/business/login';
+                } else {
+                    const errorMsg = result.error || result.detail || 'Unknown error';
+                    alert('Error: ' + errorMsg);
+                }
+            } catch (error) {
+                console.error('Setup error:', error);
+                alert('Setup failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

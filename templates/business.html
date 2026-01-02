@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Business Dashboard</title>
+    <title>Hotel Management Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,12 +11,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>📋 Business Dashboard</h1>
+        <h1>🏨 Hotel Management Dashboard</h1>
         
         <nav class="dashboard-nav">
-            <button onclick="showSection('live-orders')" class="nav-btn active" id="live-orders-btn">🔴 Live Orders</button>
-            <button onclick="showSection('waiters-new')" class="nav-btn" id="waiters-new-btn">👨🍳 Waiters</button>
-            <button onclick="showSection('analytics')" class="nav-btn" id="analytics-btn">📊 Analytics</button>
+            <button onclick="showSection('live-orders')" class="nav-btn active" id="live-orders-btn">🔴 Room Service</button>
+            <button onclick="showSection('staff-management')" class="nav-btn" id="staff-btn">👨‍💼 Staff</button>
             <button onclick="showSection('menu-management')" class="nav-btn" id="menu-management-btn">🍽️ Menu</button>
             <button onclick="showSection('qr-codes')" class="nav-btn" id="qr-codes-btn">📱 QR Codes</button>
             <button onclick="logout()" class="nav-btn logout-btn" style="margin-left: auto; background: #e53e3e;">🚪 Logout</button>
@@ -24,82 +23,208 @@
 
         <div id="live-orders" class="section-content">
             <div class="dashboard-section">
-            <h2>🏽 Tables Overview</h2>
-            <p style="color: #718096; margin-bottom: 1.5rem;">Click on occupied tables to view order details</p>
-            <div id="tables-grid"></div>
+                <h2>🏨 Rooms Overview</h2>
+                <p style="color: #718096; margin-bottom: 1.5rem;">Monitor room service orders and guest requests</p>
+                <div id="rooms-grid"></div>
             </div>
             
             <div id="order-modal" class="modal" style="display: none;">
                 <div class="modal-content">
                     <span class="close">&times;</span>
-                    <h2>📋 Order Details - Table <span id="modal-table-number"></span></h2>
+                    <h2>📋 Room Service Order - Room <span id="modal-room-number"></span></h2>
                     <div id="order-details"></div>
-                    <div class="waiter-selection">
-                        <label for="waiter-select">Select Waiter:</label>
-                        <select id="waiter-select" required>
-                            <option value="">Choose waiter...</option>
+                    <div class="staff-selection">
+                        <label for="staff-select">Assign Staff Member:</label>
+                        <select id="staff-select" required>
+                            <option value="">Choose staff member...</option>
                         </select>
                     </div>
-                    <button id="checkout-table-btn" class="finish-btn">Checkout Table</button>
+                    <button id="complete-order-btn" class="finish-btn">Complete Order</button>
                 </div>
             </div>
         </div>
 
-        <div id="waiters-new" class="section-content" style="display: none;">
+        <div id="staff-management" class="section-content" style="display: none;">
             <div class="dashboard-section">
-                <h2>👨🍳 Waiter Management</h2>
+                <h2>👨‍💼 Staff Management</h2>
                 
                 <div style="background: #f0fff4; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #68d391;">
-                    <h3>Add New Waiter</h3>
+                    <h3>Add New Staff Member</h3>
                     <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <input type="text" id="waiter-input" placeholder="Enter waiter name" style="flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                        <button onclick="addWaiter()" style="background: #38a169; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Add</button>
+                        <input type="text" id="staff-input" placeholder="Enter staff member name" style="flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <button onclick="addStaff()" style="background: #38a169; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Add</button>
                     </div>
                 </div>
                 
                 <div>
-                    <h3>Current Waiters</h3>
-                    <div id="waiters-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                    <h3>Current Staff</h3>
+                    <div id="staff-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
                 </div>
-            </div>
-        </div>
-
-        <div id="analytics" class="section-content" style="display: none;">
-            <div class="dashboard-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h2>📊 Sales Analytics</h2>
-                    <a href="javascript:void(0)" onclick="window.open(window.location.pathname.includes('/r/') ? window.location.pathname.replace('/business/dashboard', '/business/analytics') : '/business/analytics', '_blank')" style="background: #007bff; color: white; text-decoration: none; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer;">📈 Advanced</a>
-                </div>
-            <div class="sales-controls">
-                <div class="period-selector">
-                    <button onclick="loadSales('day')" class="period-btn active" id="day-btn">Today</button>
-                    <button onclick="loadSales('week')" class="period-btn" id="week-btn">This Week</button>
-                    <button onclick="loadSales('month')" class="period-btn" id="month-btn">This Month</button>
-                    <button onclick="loadSales('year')" class="period-btn" id="year-btn">This Year</button>
-                </div>
-            </div>
-                <div id="sales-summary"></div>
-
             </div>
         </div>
 
         <div id="menu-management" class="section-content" style="display: none;">
             <div class="dashboard-section">
-            <h2>🍽️ Menu Management</h2>
-            <div class="menu-controls">
-                <div class="upload-section">
-                    <h3>📄 Upload Menu</h3>
-                    <form id="upload-form" enctype="multipart/form-data">
-                        <input type="file" id="menu-file" accept=".xlsx,.xls,.pdf" required>
-                        <button type="submit">Upload Menu</button>
-                    </form>
-                </div>
-                
-                <div class="menu-items-section">
-                    <h3>🍴 Menu Items</h3>
-                    <div id="menu-items-list"></div>
+                <h2>🍽️ Room Service Menu</h2>
+                <div class="menu-controls">
+                    <div class="upload-section">
+                        <h3>📄 Upload Menu</h3>
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <input type="file" id="menu-file" accept=".xlsx,.xls,.pdf" required>
+                            <button type="submit">Upload Menu</button>
+                        </form>
+                    </div>
+                    
+                    <div class="menu-items-section">
+                        <h3>🍴 Menu Items</h3>
+                        <div id="menu-items-list"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <
+        <div id="qr-codes" class="section-content" style="display: none;">
+            <div class="dashboard-section">
+                <h2>📱 Room QR Codes</h2>
+                <p style="color: #718096; margin-bottom: 1.5rem;">Generate QR codes for guests to order room service directly from their rooms</p>
+                <div id="qr-codes-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+            document.getElementById(sectionId + '-btn').classList.add('active');
+            
+            // Load section-specific data
+            if (sectionId === 'live-orders') {
+                loadRooms();
+            } else if (sectionId === 'staff-management') {
+                loadStaff();
+            } else if (sectionId === 'menu-management') {
+                loadMenu();
+            } else if (sectionId === 'qr-codes') {
+                loadQRCodes();
+            }
+        }
+
+        function loadRooms() {
+            fetch('/business/rooms')
+                .then(response => response.json())
+                .then(rooms => {
+                    const grid = document.getElementById('rooms-grid');
+                    grid.innerHTML = rooms.map(room => `
+                        <div class="room-card ${room.status}" onclick="showRoomDetails(${room.room_number})">
+                            <div class="room-number">Room ${room.room_number}</div>
+                            <div class="room-status">${room.status}</div>
+                            ${room.has_extra_order ? '<div class="new-order">New Order!</div>' : ''}
+                        </div>
+                    `).join('');
+                })
+                .catch(error => console.error('Error loading rooms:', error));
+        }
+
+        function showRoomDetails(roomNumber) {
+            // Show room service order details
+            console.log('Show details for room:', roomNumber);
+        }
+
+        function loadStaff() {
+            // Load staff members
+            console.log('Loading staff...');
+        }
+
+        function loadMenu() {
+            // Load menu items
+            console.log('Loading menu...');
+        }
+
+        function loadQRCodes() {
+            // Generate QR codes for rooms
+            console.log('Loading QR codes...');
+        }
+
+        function addStaff() {
+            const input = document.getElementById('staff-input');
+            const name = input.value.trim();
+            if (name) {
+                // Add staff member logic
+                console.log('Adding staff member:', name);
+                input.value = '';
+            }
+        }
+
+        function logout() {
+            window.location.href = '/business/login';
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRooms();
+        });
+    </script>
+
+    <style>
+        .room-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .room-card.available {
+            border-color: #68d391;
+            background: #f0fff4;
+        }
+
+        .room-card.occupied {
+            border-color: #f56565;
+            background: #fff5f5;
+        }
+
+        .room-number {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .room-status {
+            color: #718096;
+            text-transform: capitalize;
+        }
+
+        .new-order {
+            background: #f56565;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.8em;
+        }
+
+        #rooms-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</body>
+</html>

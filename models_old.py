@@ -5,8 +5,8 @@ from datetime import datetime
 
 Base = declarative_base()
 
-class Hotel(Base):
-    __tablename__ = "tablelink_hotels"
+class Restaurant(Base):
+    __tablename__ = "tablelink_restaurants"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
@@ -18,86 +18,86 @@ class Hotel(Base):
     active = Column(Boolean, default=True)
     
     # Relationships
-    users = relationship("User", back_populates="hotel")
-    rooms = relationship("Room", back_populates="hotel")
-    menu_items = relationship("MenuItem", back_populates="hotel")
-    staff = relationship("Staff", back_populates="hotel")
-    orders = relationship("Order", back_populates="hotel")
-    analytics_records = relationship("AnalyticsRecord", back_populates="hotel")
+    users = relationship("User", back_populates="restaurant")
+    tables = relationship("Table", back_populates="restaurant")
+    menu_items = relationship("MenuItem", back_populates="restaurant")
+    waiters = relationship("Waiter", back_populates="restaurant")
+    orders = relationship("Order", back_populates="restaurant")
+    analytics_records = relationship("AnalyticsRecord", back_populates="restaurant")
 
 class User(Base):
     __tablename__ = "tablelink_users"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    hotel_id = Column(Integer, ForeignKey('tablelink_hotels.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     username = Column(String(50), nullable=False)
     password_hash = Column(String(255), nullable=False)
-    role = Column(String(20), default='staff')  # 'admin', 'staff'
+    role = Column(String(20), default='waiter')  # 'admin', 'waiter'
     active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    hotel = relationship("Hotel", back_populates="users")
+    restaurant = relationship("Restaurant", back_populates="users")
     
     __table_args__ = (
-        # Username should be unique per hotel
+        # Username should be unique per restaurant
         {'sqlite_autoincrement': True}
     )
 
-class Room(Base):
-    __tablename__ = "tablelink_rooms"
+class Table(Base):
+    __tablename__ = "tablelink_tables"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    hotel_id = Column(Integer, ForeignKey('tablelink_hotels.id'), nullable=False)
-    room_number = Column(Integer, nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
+    table_number = Column(Integer, nullable=False)
     code = Column(String(3), nullable=False)
-    status = Column(String(10), default='available')  # 'available' or 'occupied'
+    status = Column(String(10), default='free')  # 'free' or 'occupied'
     has_extra_order = Column(Boolean, default=False)
     checkout_requested = Column(Boolean, default=False)
     checkout_method = Column(String(10))  # 'cash' or 'card'
     tip_amount = Column(Float, default=0.0)
     
-    hotel = relationship("Hotel", back_populates="rooms")
-    orders = relationship("Order", back_populates="room")
+    restaurant = relationship("Restaurant", back_populates="tables")
+    orders = relationship("Order", back_populates="table")
 
 class MenuItem(Base):
     __tablename__ = "tablelink_menu_items"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    hotel_id = Column(Integer, ForeignKey('tablelink_hotels.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     name = Column(String(100), nullable=False)
     ingredients = Column(String(500))
     price = Column(Float, nullable=False)
     category = Column(String(50), default='Food')
     active = Column(Boolean, default=True)
     
-    hotel = relationship("Hotel", back_populates="menu_items")
+    restaurant = relationship("Restaurant", back_populates="menu_items")
     order_items = relationship("OrderItem", back_populates="menu_item")
 
-class Staff(Base):
-    __tablename__ = "tablelink_staff"
+class Waiter(Base):
+    __tablename__ = "tablelink_waiters"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    hotel_id = Column(Integer, ForeignKey('tablelink_hotels.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     name = Column(String(100), nullable=False)
     active = Column(Boolean, default=True)
     
-    hotel = relationship("Hotel", back_populates="staff")
-    orders = relationship("Order", back_populates="staff_member")
+    restaurant = relationship("Restaurant", back_populates="waiters")
+    orders = relationship("Order", back_populates="waiter")
 
 class Order(Base):
     __tablename__ = "tablelink_orders"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    hotel_id = Column(Integer, ForeignKey('tablelink_hotels.id'), nullable=False)
-    room_id = Column(Integer, ForeignKey('tablelink_rooms.id'))
-    staff_id = Column(Integer, ForeignKey('tablelink_staff.id'))
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
+    table_id = Column(Integer, ForeignKey('tablelink_tables.id'))
+    waiter_id = Column(Integer, ForeignKey('tablelink_waiters.id'))
     created_at = Column(DateTime, default=datetime.utcnow)
     status = Column(String(10), default='active')  # 'active' or 'finished'
     tip_amount = Column(Float, default=0.0)
     
-    hotel = relationship("Hotel", back_populates="orders")
-    room = relationship("Room", back_populates="orders")
-    staff_member = relationship("Staff", back_populates="orders")
+    restaurant = relationship("Restaurant", back_populates="orders")
+    table = relationship("Table", back_populates="orders")
+    waiter = relationship("Waiter", back_populates="orders")
     order_items = relationship("OrderItem", back_populates="order")
 
 class OrderItem(Base):
@@ -118,10 +118,10 @@ class AnalyticsRecord(Base):
     __tablename__ = "tablelink_analytics_records"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    hotel_id = Column(Integer, ForeignKey('tablelink_hotels.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     checkout_date = Column(DateTime, nullable=False)
-    room_number = Column(Integer, nullable=False)
-    staff_id = Column(Integer, ForeignKey('tablelink_staff.id'))
+    table_number = Column(Integer, nullable=False)
+    waiter_id = Column(Integer, ForeignKey('tablelink_waiters.id'))
     item_name = Column(String(100), nullable=False)
     item_category = Column(String(50), nullable=False)
     quantity = Column(Integer, nullable=False)
@@ -129,8 +129,8 @@ class AnalyticsRecord(Base):
     total_price = Column(Float, nullable=False)
     tip_amount = Column(Float, default=0.0)
     
-    hotel = relationship("Hotel", back_populates="analytics_records")
-    staff_member = relationship("Staff")
+    restaurant = relationship("Restaurant", back_populates="analytics_records")
+    waiter = relationship("Waiter")
 
 # Database setup
 import os

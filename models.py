@@ -6,7 +6,7 @@ from datetime import datetime
 Base = declarative_base()
 
 class Restaurant(Base):
-    __tablename__ = "restaurants"
+    __tablename__ = "tablelink_restaurants"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
@@ -26,10 +26,10 @@ class Restaurant(Base):
     analytics_records = relationship("AnalyticsRecord", back_populates="restaurant")
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "tablelink_users"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     username = Column(String(50), nullable=False)
     password_hash = Column(String(255), nullable=False)
     role = Column(String(20), default='waiter')  # 'admin', 'waiter'
@@ -44,10 +44,10 @@ class User(Base):
     )
 
 class Table(Base):
-    __tablename__ = "tables"
+    __tablename__ = "tablelink_tables"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     table_number = Column(Integer, nullable=False)
     code = Column(String(3), nullable=False)
     status = Column(String(10), default='free')  # 'free' or 'occupied'
@@ -60,10 +60,10 @@ class Table(Base):
     orders = relationship("Order", back_populates="table")
 
 class MenuItem(Base):
-    __tablename__ = "menu_items"
+    __tablename__ = "tablelink_menu_items"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     name = Column(String(100), nullable=False)
     ingredients = Column(String(500))
     price = Column(Float, nullable=False)
@@ -74,10 +74,10 @@ class MenuItem(Base):
     order_items = relationship("OrderItem", back_populates="menu_item")
 
 class Waiter(Base):
-    __tablename__ = "waiters"
+    __tablename__ = "tablelink_waiters"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     name = Column(String(100), nullable=False)
     active = Column(Boolean, default=True)
     
@@ -85,12 +85,12 @@ class Waiter(Base):
     orders = relationship("Order", back_populates="waiter")
 
 class Order(Base):
-    __tablename__ = "orders"
+    __tablename__ = "tablelink_orders"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
-    table_id = Column(Integer, ForeignKey('tables.id'))
-    waiter_id = Column(Integer, ForeignKey('waiters.id'))
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
+    table_id = Column(Integer, ForeignKey('tablelink_tables.id'))
+    waiter_id = Column(Integer, ForeignKey('tablelink_waiters.id'))
     created_at = Column(DateTime, default=datetime.utcnow)
     status = Column(String(10), default='active')  # 'active' or 'finished'
     tip_amount = Column(Float, default=0.0)
@@ -101,11 +101,11 @@ class Order(Base):
     order_items = relationship("OrderItem", back_populates="order")
 
 class OrderItem(Base):
-    __tablename__ = "order_items"
+    __tablename__ = "tablelink_order_items"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    order_id = Column(Integer, ForeignKey('orders.id'))
-    product_id = Column(Integer, ForeignKey('menu_items.id'))
+    order_id = Column(Integer, ForeignKey('tablelink_orders.id'))
+    product_id = Column(Integer, ForeignKey('tablelink_menu_items.id'))
     qty = Column(Integer, nullable=False)
     is_extra_item = Column(Boolean, default=False)
     is_new_extra = Column(Boolean, default=False)
@@ -115,13 +115,13 @@ class OrderItem(Base):
     menu_item = relationship("MenuItem", back_populates="order_items")
 
 class AnalyticsRecord(Base):
-    __tablename__ = "analytics_records"
+    __tablename__ = "tablelink_analytics_records"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('tablelink_restaurants.id'), nullable=False)
     checkout_date = Column(DateTime, nullable=False)
     table_number = Column(Integer, nullable=False)
-    waiter_id = Column(Integer, ForeignKey('waiters.id'))
+    waiter_id = Column(Integer, ForeignKey('tablelink_waiters.id'))
     item_name = Column(String(100), nullable=False)
     item_category = Column(String(50), nullable=False)
     quantity = Column(Integer, nullable=False)
@@ -135,9 +135,15 @@ class AnalyticsRecord(Base):
 # Database setup
 import os
 
-# Use PostgreSQL in production, SQLite in development
-if os.getenv("DATABASE_URL"):
-    # Production (Heroku) - Fix postgres:// to postgresql://
+# Use shared PostgreSQL database with tablelink prefix
+if os.getenv("DATABASE_SHARED_URL"):
+    # Production (Heroku) - Use shared database
+    DATABASE_URL = os.getenv("DATABASE_SHARED_URL")
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    engine = create_engine(DATABASE_URL)
+elif os.getenv("DATABASE_URL"):
+    # Fallback to regular DATABASE_URL
     DATABASE_URL = os.getenv("DATABASE_URL")
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -154,7 +160,7 @@ def create_tables():
     # Create analytics table if it doesn't exist
     from sqlalchemy import inspect
     inspector = inspect(engine)
-    if 'analytics_records' not in inspector.get_table_names():
+    if 'tablelink_analytics_records' not in inspector.get_table_names():
         AnalyticsRecord.__table__.create(engine)
 
 def get_db():

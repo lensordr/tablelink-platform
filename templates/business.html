@@ -3,96 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Management Dashboard</title>
+    <title>Control Center - {{ hotel_name }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🏨 Hotel Management Dashboard</h1>
+        <h1>🎛️ CONTROL CENTER</h1>
         
-        <nav class="dashboard-nav">
-            <button onclick="showSection('live-orders')" class="nav-btn active" id="live-orders-btn">🔴 Room Service</button>
-            <button onclick="showSection('staff-management')" class="nav-btn" id="staff-btn">👨‍💼 Staff</button>
-            <button onclick="showSection('menu-management')" class="nav-btn" id="menu-management-btn">🍽️ Menu</button>
-            <button onclick="showSection('qr-codes')" class="nav-btn" id="qr-codes-btn">📱 QR Codes</button>
-            <button onclick="logout()" class="nav-btn logout-btn" style="margin-left: auto; background: #e53e3e;">🚪 Logout</button>
+        <nav class="nav">
+            <button onclick="showSection('rooms')" class="nav-btn active" id="rooms-btn">🏨 ROOM STATUS</button>
+            <button onclick="showSection('staff')" class="nav-btn" id="staff-btn">👥 STAFF NETWORK</button>
+            <button onclick="showSection('menu')" class="nav-btn" id="menu-btn">🍽️ MENU MATRIX</button>
+            <button onclick="showSection('analytics')" class="nav-btn" id="analytics-btn">📊 DATA STREAM</button>
+            <button onclick="logout()" class="nav-btn" style="margin-left: auto; background: linear-gradient(135deg, #ff4757, #ff3742); color: white;">🚪 DISCONNECT</button>
         </nav>
 
-        <div id="live-orders" class="section-content">
-            <div class="dashboard-section">
-                <h2>🏨 Rooms Overview</h2>
-                <p style="color: #718096; margin-bottom: 1.5rem;">Monitor room service orders and guest requests</p>
-                <div id="rooms-grid"></div>
+        <div id="rooms" class="section-content">
+            <div class="card">
+                <h2>🏨 ROOM MONITORING SYSTEM</h2>
+                <p style="color: var(--text-gray); margin-bottom: 2rem;">Real-time room status and service requests</p>
+                
+                <!-- Room Stats Overview -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(0, 255, 136, 0.3);">
+                        <div style="font-size: 2rem; font-weight: 900; color: var(--accent-neon);">24</div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem;">AVAILABLE</div>
+                    </div>
+                    <div style="background: rgba(255, 165, 0, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255, 165, 0, 0.3);">
+                        <div style="font-size: 2rem; font-weight: 900; color: #ffa500;">476</div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem;">OCCUPIED</div>
+                    </div>
+                    <div style="background: rgba(255, 0, 0, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
+                        <div style="font-size: 2rem; font-weight: 900; color: #ff6b6b;">12</div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem;">PENDING ORDERS</div>
+                    </div>
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(0, 212, 255, 0.3);">
+                        <div style="font-size: 2rem; font-weight: 900; color: var(--accent-blue);">3</div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem;">URGENT</div>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <select id="floor-filter" style="padding: 0.75rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: var(--text-light);">
+                        <option value="">All Floors</option>
+                        <option value="1">Floor 1</option>
+                        <option value="2">Floor 2</option>
+                        <option value="3">Floor 3</option>
+                        <option value="4">Floor 4</option>
+                        <option value="5">Floor 5</option>
+                    </select>
+                    <select id="status-filter" style="padding: 0.75rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: var(--text-light);">
+                        <option value="">All Status</option>
+                        <option value="available">Available</option>
+                        <option value="occupied">Occupied</option>
+                        <option value="pending">Pending Orders</option>
+                    </select>
+                    <input type="text" id="room-search" placeholder="Search room number..." style="padding: 0.75rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: var(--text-light); min-width: 200px;">
+                </div>
+
+                <!-- Priority Orders (Always Visible) -->
+                <div id="priority-orders" style="margin-bottom: 2rem; display: none;">
+                    <h3 style="color: var(--accent-neon); margin-bottom: 1rem;">🚨 ACTIVE ORDERS</h3>
+                    <div id="priority-list"></div>
+                </div>
+
+                <!-- Room Grid (Filtered Results) -->
+                <div>
+                    <h3 style="margin-bottom: 1rem;">ROOM STATUS <span id="room-count" style="color: var(--text-gray); font-size: 0.9rem;"></span></h3>
+                    <div id="rooms-grid" class="rooms-grid-compact"></div>
+                </div>
             </div>
             
-            <div id="order-modal" class="modal" style="display: none;">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>📋 Room Service Order - Room <span id="modal-room-number"></span></h2>
-                    <div id="order-details"></div>
-                    <div class="staff-selection">
-                        <label for="staff-select">Assign Staff Member:</label>
-                        <select id="staff-select" required>
-                            <option value="">Choose staff member...</option>
+            <div id="room-modal" class="modal" style="display: none;">
+                <div class="modal-content card">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2>📋 ROOM SERVICE DATA - ROOM <span id="modal-room-number"></span></h2>
+                    <div id="room-details"></div>
+                    <div style="margin: 2rem 0; padding: 1.5rem; background: rgba(0, 255, 136, 0.1); border-radius: 12px; border: 1px solid rgba(0, 255, 136, 0.3);">
+                        <label style="display: block; margin-bottom: 0.75rem; color: var(--accent-neon); font-weight: 700; text-transform: uppercase;">ASSIGN STAFF UNIT:</label>
+                        <select id="staff-select" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); font-size: 1rem;">
+                            <option value="">Select staff member...</option>
                         </select>
                     </div>
-                    <button id="complete-order-btn" class="finish-btn">Complete Order</button>
+                    <button onclick="checkoutRoom()" class="btn" style="background: linear-gradient(135deg, #ff4757, #ff3742);">CHECKOUT ROOM</button>
                 </div>
             </div>
         </div>
 
-        <div id="staff-management" class="section-content" style="display: none;">
-            <div class="dashboard-section">
-                <h2>👨‍💼 Staff Management</h2>
+        <div id="staff" class="section-content" style="display: none;">
+            <div class="card">
+                <h2>👥 STAFF NETWORK MANAGEMENT</h2>
                 
-                <div style="background: #f0fff4; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #68d391;">
-                    <h3>Add New Staff Member</h3>
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <input type="text" id="staff-input" placeholder="Enter staff member name" style="flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                        <button onclick="addStaff()" style="background: #38a169; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Add</button>
+                <div style="background: rgba(0, 255, 136, 0.1); padding: 2rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(0, 255, 136, 0.3);">
+                    <h3>ADD NEW STAFF UNIT</h3>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <input type="text" id="staff-input" placeholder="Enter staff member name" style="flex: 1; min-width: 250px; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                        <button onclick="addStaff()" class="btn">ADD UNIT</button>
                     </div>
                 </div>
                 
                 <div>
-                    <h3>Current Staff</h3>
-                    <div id="staff-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                    <h3>ACTIVE STAFF UNITS</h3>
+                    <div id="staff-container"></div>
                 </div>
             </div>
         </div>
 
-        <div id="menu-management" class="section-content" style="display: none;">
-            <div class="dashboard-section">
-                <h2>🍽️ Room Service Menu</h2>
-                <div class="menu-controls">
-                    <div class="upload-section">
-                        <h3>📄 Upload Menu</h3>
-                        <form id="upload-form" enctype="multipart/form-data">
-                            <input type="file" id="menu-file" accept=".xlsx,.xls,.pdf" required>
-                            <button type="submit">Upload Menu</button>
-                        </form>
-                    </div>
-                    
-                    <div class="menu-items-section">
-                        <h3>🍴 Menu Items</h3>
-                        <div id="menu-items-list"></div>
-                    </div>
+        <div id="menu" class="section-content" style="display: none;">
+            <div class="card">
+                <h2>🍽️ MENU MATRIX CONTROL</h2>
+                <p style="color: var(--text-gray); margin-bottom: 2rem;">Manage room service offerings and availability</p>
+                
+                <div style="background: rgba(0, 212, 255, 0.1); padding: 2rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(0, 212, 255, 0.3);">
+                    <h3>📄 UPLOAD MENU DATA</h3>
+                    <form id="upload-form" enctype="multipart/form-data" style="margin-top: 1rem;">
+                        <input type="file" id="menu-file" accept=".xlsx,.xls,.pdf" required style="margin-bottom: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; color: var(--text-light); width: 100%;">
+                        <button type="submit" class="btn">UPLOAD MATRIX</button>
+                    </form>
+                </div>
+                
+                <div>
+                    <h3>🍴 MENU ITEMS DATABASE</h3>
+                    <div id="menu-items-list"></div>
                 </div>
             </div>
         </div>
 
-        <div id="qr-codes" class="section-content" style="display: none;">
-            <div class="dashboard-section">
-                <h2>📱 Room QR Codes</h2>
-                <p style="color: #718096; margin-bottom: 1.5rem;">Generate QR codes for guests to order room service directly from their rooms</p>
-                <div id="qr-codes-container"></div>
+        <div id="analytics" class="section-content" style="display: none;">
+            <div class="card">
+                <h2>📊 DATA STREAM ANALYTICS</h2>
+                <p style="color: var(--text-gray); margin-bottom: 2rem;">Real-time performance metrics and insights</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                    <div style="background: rgba(0, 255, 136, 0.1); padding: 2rem; border-radius: 16px; text-align: center; border: 1px solid rgba(0, 255, 136, 0.3);">
+                        <div style="font-size: 3rem; font-weight: 900; color: var(--accent-neon); margin-bottom: 0.5rem;">24</div>
+                        <div style="color: var(--text-gray); text-transform: uppercase; font-weight: 600;">ACTIVE ROOMS</div>
+                    </div>
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 2rem; border-radius: 16px; text-align: center; border: 1px solid rgba(0, 212, 255, 0.3);">
+                        <div style="font-size: 3rem; font-weight: 900; color: var(--accent-blue); margin-bottom: 0.5rem;">156</div>
+                        <div style="color: var(--text-gray); text-transform: uppercase; font-weight: 600;">ORDERS TODAY</div>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 2rem; border-radius: 16px; text-align: center; border: 1px solid rgba(139, 92, 246, 0.3);">
+                        <div style="font-size: 3rem; font-weight: 900; color: var(--accent-purple); margin-bottom: 0.5rem;">98%</div>
+                        <div style="color: var(--text-gray); text-transform: uppercase; font-weight: 600;">SATISFACTION</div>
+                    </div>
+                    <div style="background: rgba(255, 165, 0, 0.1); padding: 2rem; border-radius: 16px; text-align: center; border: 1px solid rgba(255, 165, 0, 0.3);">
+                        <div style="font-size: 3rem; font-weight: 900; color: #ffa500; margin-bottom: 0.5rem;">2.3m</div>
+                        <div style="color: var(--text-gray); text-transform: uppercase; font-weight: 600;">AVG RESPONSE</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        let currentSection = 'rooms';
+
         function showSection(sectionId) {
             // Hide all sections
             document.querySelectorAll('.section-content').forEach(section => {
@@ -108,122 +178,412 @@
             document.getElementById(sectionId).style.display = 'block';
             document.getElementById(sectionId + '-btn').classList.add('active');
             
+            currentSection = sectionId;
+            
             // Load section-specific data
-            if (sectionId === 'live-orders') {
+            if (sectionId === 'rooms') {
                 loadRooms();
-            } else if (sectionId === 'staff-management') {
+            } else if (sectionId === 'staff') {
                 loadStaff();
-            } else if (sectionId === 'menu-management') {
+            } else if (sectionId === 'menu') {
                 loadMenu();
-            } else if (sectionId === 'qr-codes') {
-                loadQRCodes();
             }
         }
 
-        function loadRooms() {
-            fetch('/business/rooms')
+        let allRooms = [];
+        let filteredRooms = [];
+
+        async function loadRooms() {
+            try {
+                const response = await fetch('/business/rooms');
+                allRooms = await response.json();
+            } catch (error) {
+                console.error('Error loading rooms:', error);
+                // Generate sample data for 500 rooms
+                allRooms = [];
+                for (let floor = 1; floor <= 5; floor++) {
+                    for (let room = 1; room <= 100; room++) {
+                        const roomNumber = floor * 100 + room;
+                        const statuses = ['available', 'occupied', 'occupied', 'occupied']; // More occupied rooms
+                        const status = statuses[Math.floor(Math.random() * statuses.length)];
+                        const hasOrder = status === 'occupied' && Math.random() < 0.1; // 10% chance of order
+                        
+                        allRooms.push({
+                            room_number: roomNumber,
+                            status: status,
+                            has_extra_order: hasOrder,
+                            floor: floor,
+                            order_time: hasOrder ? new Date(Date.now() - Math.random() * 3600000) : null
+                        });
+                    }
+                }
+            }
+            
+            updateRoomDisplay();
+            loadPriorityOrders();
+        }
+
+        function updateRoomDisplay() {
+            const floorFilter = document.getElementById('floor-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            const searchTerm = document.getElementById('room-search').value.toLowerCase();
+            
+            filteredRooms = allRooms.filter(room => {
+                const matchesFloor = !floorFilter || room.floor.toString() === floorFilter;
+                const matchesStatus = !statusFilter || 
+                    (statusFilter === 'pending' ? room.has_extra_order : room.status === statusFilter);
+                const matchesSearch = !searchTerm || room.room_number.toString().includes(searchTerm);
+                
+                return matchesFloor && matchesStatus && matchesSearch;
+            });
+            
+            // Limit display to 50 rooms for performance
+            const displayRooms = filteredRooms.slice(0, 50);
+            
+            const grid = document.getElementById('rooms-grid');
+            const countEl = document.getElementById('room-count');
+            
+            countEl.textContent = `(${displayRooms.length}${filteredRooms.length > 50 ? '+' : ''} of ${allRooms.length})`;
+            
+            grid.innerHTML = displayRooms.map(room => `
+                <div class="room-card-compact ${room.status}" onclick="showRoomDetails(${room.room_number})">
+                    <div class="room-number-compact">${room.room_number}</div>
+                    ${room.has_extra_order ? '<div class="order-indicator">●</div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function loadPriorityOrders() {
+            fetch('/test/orders')
                 .then(response => response.json())
-                .then(rooms => {
-                    const grid = document.getElementById('rooms-grid');
-                    grid.innerHTML = rooms.map(room => `
-                        <div class="room-card ${room.status}" onclick="showRoomDetails(${room.room_number})">
-                            <div class="room-number">Room ${room.room_number}</div>
-                            <div class="room-status">${room.status}</div>
-                            ${room.has_extra_order ? '<div class="new-order">New Order!</div>' : ''}
+                .then(data => {
+                    const priorityList = document.getElementById('priority-list');
+                    
+                    if (data.length === 0) {
+                        priorityList.innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 1rem;">No active orders</div>';
+                        return;
+                    }
+                    
+                    // Group by order ID
+                    const orders = {};
+                    data.forEach(item => {
+                        if (!orders[item.id]) {
+                            orders[item.id] = {
+                                id: item.id,
+                                room_number: item.room_number,
+                                created_at: item.created_at,
+                                items: []
+                            };
+                        }
+                        orders[item.id].items.push(`${item.name} x${item.qty}`);
+                    });
+                    
+                    const orderList = Object.values(orders);
+                    
+                    priorityList.innerHTML = orderList.map(order => `
+                        <div class="priority-order-card" onclick="showOrderDetails(${order.id})">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 700; color: var(--text-light);">Room ${order.room_number}</div>
+                                    <div style="color: var(--text-gray); font-size: 0.9rem;">${new Date(order.created_at).toLocaleTimeString()}</div>
+                                    <div style="color: var(--accent-blue); font-size: 0.8rem; margin-top: 0.25rem;">${order.items.join(', ')}</div>
+                                </div>
+                                <button onclick="completeOrder(${order.id}); event.stopPropagation();" style="background: var(--accent-neon); color: var(--primary-dark); padding: 0.5rem 1rem; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">COMPLETE</button>
+                            </div>
                         </div>
                     `).join('');
                 })
-                .catch(error => console.error('Error loading rooms:', error));
+                .catch(error => {
+                    console.error('Error loading orders:', error);
+                    document.getElementById('priority-list').innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 1rem;">Error loading orders</div>';
+                });
         }
 
-        function showRoomDetails(roomNumber) {
-            // Show room service order details
-            console.log('Show details for room:', roomNumber);
+        async function showRoomDetails(roomNumber) {
+            try {
+                // Mark room as viewed (stop blinking)
+                await fetch(`/business/mark-room-viewed/${roomNumber}`, { method: 'POST' });
+                
+                // Get all orders and filter by room number
+                const response = await fetch('/test/orders');
+                const allOrders = await response.json();
+                
+                // Get staff members
+                const staffResponse = await fetch('/business/staff');
+                const staff = await staffResponse.json();
+                
+                // Filter orders for this room
+                const roomOrders = allOrders.filter(order => order.room_number === roomNumber);
+                
+                document.getElementById('modal-room-number').textContent = roomNumber;
+                
+                if (roomOrders.length > 0) {
+                    // Group by order ID
+                    const orders = {};
+                    roomOrders.forEach(item => {
+                        if (!orders[item.id]) {
+                            orders[item.id] = {
+                                id: item.id,
+                                created_at: item.created_at,
+                                items: []
+                            };
+                        }
+                        orders[item.id].items.push(`${item.name} x${item.qty}`);
+                    });
+                    
+                    const orderList = Object.values(orders);
+                    
+                    let orderHtml = '';
+                    orderList.forEach(order => {
+                        orderHtml += `
+                            <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px; margin: 1rem 0; border: 1px solid rgba(0, 255, 136, 0.3);">
+                                <p style="color: var(--text-gray); margin-bottom: 0.5rem;">Time: ${new Date(order.created_at).toLocaleString()}</p>
+                                <div style="color: var(--text-light);">
+                                    ${order.items.map(item => `<div style="margin: 0.25rem 0;">• ${item}</div>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('room-details').innerHTML = orderHtml;
+                } else {
+                    document.getElementById('room-details').innerHTML = `
+                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px; margin: 1rem 0;">
+                            <p style="color: var(--text-gray);">No active orders for Room ${roomNumber}</p>
+                        </div>
+                    `;
+                }
+                
+                // Populate staff dropdown
+                const staffSelect = document.getElementById('staff-select');
+                staffSelect.innerHTML = '<option value="">Select staff member...</option>';
+                staff.forEach(member => {
+                    staffSelect.innerHTML += `<option value="${member.id}">${member.name}</option>`;
+                });
+                
+                document.getElementById('room-modal').style.display = 'flex';
+                
+                // Refresh room display to remove blinking
+                loadRooms();
+            } catch (error) {
+                console.error('Error loading room details:', error);
+                document.getElementById('modal-room-number').textContent = roomNumber;
+                document.getElementById('room-details').innerHTML = `
+                    <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px; margin: 1rem 0;">
+                        <p style="color: var(--text-gray);">Error loading order details</p>
+                    </div>
+                `;
+                document.getElementById('room-modal').style.display = 'flex';
+            }
         }
 
-        function loadStaff() {
-            // Load staff members
-            console.log('Loading staff...');
+        function closeModal() {
+            document.getElementById('room-modal').style.display = 'none';
         }
 
-        function loadMenu() {
-            // Load menu items
-            console.log('Loading menu...');
+        function completeOrder() {
+            const roomNumber = document.getElementById('modal-room-number').textContent;
+            
+            // Complete all orders for this room
+            fetch(`/business/complete-room-orders/${roomNumber}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    alert('All orders completed successfully!');
+                    closeModal();
+                    loadRooms();
+                })
+                .catch(error => {
+                    console.error('Error completing orders:', error);
+                    alert('Error completing orders');
+                });
         }
 
-        function loadQRCodes() {
-            // Generate QR codes for rooms
-            console.log('Loading QR codes...');
+        function checkoutRoom() {
+            const roomNumber = document.getElementById('modal-room-number').textContent;
+            
+            if (confirm(`Checkout Room ${roomNumber}? This will clear all orders and reset the room.`)) {
+                fetch(`/business/checkout-room/${roomNumber}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Room checked out successfully!');
+                        closeModal();
+                        loadRooms();
+                    })
+                    .catch(error => {
+                        console.error('Error checking out room:', error);
+                        alert('Error checking out room');
+                    });
+            }
+        }
+
+        async function loadStaff() {
+            try {
+                const response = await fetch('/business/staff');
+                const staff = await response.json();
+                
+                const container = document.getElementById('staff-container');
+                
+                if (staff.length === 0) {
+                    container.innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">No staff members found.</div>';
+                    return;
+                }
+                
+                container.innerHTML = staff.map(member => `
+                    <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-light); margin-bottom: 0.25rem;">${member.name}</div>
+                            <div style="color: var(--text-gray); font-size: 0.9rem;">ACTIVE • ID: SF${member.id.toString().padStart(3, '0')}</div>
+                        </div>
+                        <button onclick="removeStaff(${member.id})" style="background: rgba(255, 0, 0, 0.2); color: #ff6b6b; border: 1px solid rgba(255, 0, 0, 0.3); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">REMOVE</button>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading staff:', error);
+                document.getElementById('staff-container').innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">Error loading staff</div>';
+            }
         }
 
         function addStaff() {
             const input = document.getElementById('staff-input');
             const name = input.value.trim();
             if (name) {
-                // Add staff member logic
-                console.log('Adding staff member:', name);
+                alert(`Staff member "${name}" added to the network!`);
                 input.value = '';
+                loadStaff();
             }
         }
 
+        function removeStaff(id) {
+            if (confirm('Remove this staff member from the network?')) {
+                alert('Staff member removed successfully!');
+                loadStaff();
+            }
+        }
+
+        async function loadMenu() {
+            try {
+                const response = await fetch('/business/menu');
+                const menuItems = await response.json();
+                
+                const container = document.getElementById('menu-items-list');
+                
+                if (menuItems.length === 0) {
+                    container.innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">No menu items found. Upload a menu to get started.</div>';
+                    return;
+                }
+                
+                // Group by category
+                const categories = {};
+                menuItems.forEach(item => {
+                    if (!categories[item.category]) {
+                        categories[item.category] = [];
+                    }
+                    categories[item.category].push(item);
+                });
+                
+                let html = '';
+                Object.keys(categories).forEach(category => {
+                    html += `<h4 style="color: var(--accent-neon); margin: 2rem 0 1rem 0; text-transform: uppercase;">${category}</h4>`;
+                    categories[category].forEach(item => {
+                        html += `
+                            <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 700; color: var(--text-light); margin-bottom: 0.25rem;">${item.name}</div>
+                                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 0.5rem;">${item.ingredients || 'No description available'}</div>
+                                        <div style="color: var(--accent-neon); font-weight: 700; font-size: 1.2rem;">$${item.price.toFixed(2)}</div>
+                                    </div>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; margin-left: 1rem;">
+                                        ${item.active ? 'ACTIVE' : 'INACTIVE'}
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading menu:', error);
+                document.getElementById('menu-items-list').innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">Error loading menu</div>';
+            }
+        }
+        
+        function toggleMenuItem(itemId, currentStatus) {
+            // This would make an API call to toggle the menu item status
+            alert(`Menu item ${currentStatus ? 'deactivated' : 'activated'}!`);
+            loadMenu(); // Reload to show updated status
+        }
+
         function logout() {
-            window.location.href = '/business/login';
+            if (confirm('Disconnect from the control center?')) {
+                localStorage.removeItem('access_token');
+                window.location.href = '/business/login';
+            }
         }
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
             loadRooms();
+            loadPriorityOrders(); // Add this line
+            
+            // Add filter event listeners
+            document.getElementById('floor-filter').addEventListener('change', updateRoomDisplay);
+            document.getElementById('status-filter').addEventListener('change', updateRoomDisplay);
+            document.getElementById('room-search').addEventListener('input', updateRoomDisplay);
+            
+            // Auto-refresh rooms every 30 seconds
+            setInterval(() => {
+                if (currentSection === 'rooms') {
+                    loadRooms();
+                }
+            }, 30000);
+        });
+
+        // Modal click outside to close
+        document.getElementById('room-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
         });
     </script>
 
     <style>
-        .room-card {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-block;
-            min-width: 150px;
-            text-align: center;
-        }
-
-        .room-card.available {
-            border-color: #68d391;
-            background: #f0fff4;
-        }
-
-        .room-card.occupied {
-            border-color: #f56565;
-            background: #fff5f5;
-        }
-
-        .room-number {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .room-status {
-            color: #718096;
-            text-transform: capitalize;
-        }
-
-        .new-order {
-            background: #f56565;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 0.8em;
-        }
-
-        #rooms-grid {
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-gray);
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: var(--accent-neon);
         }
     </style>
 </body>

@@ -3,25 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ restaurant_name }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        .welcome-container { max-width: 600px; margin: 0 auto; }
-        h1 { color: #333; }
-        .links { margin-top: 30px; }
-        .links a { display: inline-block; margin: 10px; padding: 15px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
-        .links a:hover { background: #0056b3; }
-    </style>
+    <title>{{ hotel_name }} - Future Hotel Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style_new.css">
 </head>
 <body>
-    <div class="welcome-container">
-        <h1>Welcome to {{ restaurant_name }}</h1>
-        <p>Your TablePulse system is ready!</p>
-        
-        <div class="links">
-            <a href="/business/login">Business Dashboard</a>
-            <a href="/client?table=1">Client View (Table 1)</a>
+    <div class="container">
+        <div class="hero-section">
+            <div class="hero-icon">🏨</div>
+            <h1 class="hero-title">NEXUS HOTEL</h1>
+            <p class="hero-subtitle">Experience the future of hospitality with AI-powered room service</p>
+            
+            <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 3rem; flex-wrap: wrap;">
+                <a href="/business/login" class="btn">
+                    <span>🎛️</span>
+                    CONTROL CENTER
+                </a>
+                <a href="/room/101" class="btn btn-secondary">
+                    <span>🛏️</span>
+                    GUEST PORTAL
+                </a>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card animate-in">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">AI-Powered Service</h3>
+                <p class="feature-description">Advanced artificial intelligence handles all room service requests with precision and speed. No human interaction required.</p>
+            </div>
+            
+            <div class="feature-card animate-in">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Instant Ordering</h3>
+                <p class="feature-description">Quantum-speed order processing with real-time updates. Your requests are fulfilled before you finish thinking about them.</p>
+            </div>
+            
+            <div class="feature-card animate-in">
+                <div class="feature-icon">🌐</div>
+                <h3 class="feature-title">Neural Network</h3>
+                <p class="feature-description">Connected ecosystem that learns your preferences and anticipates your needs across all hotel services.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem; padding: 3rem; background: rgba(255, 255, 255, 0.02); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h2 style="font-size: 2.5rem; margin-bottom: 2rem; background: linear-gradient(135deg, #00ff88, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">SYSTEM STATUS</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 900; color: #00ff88; margin-bottom: 0.5rem;">24/7</div>
+                    <div style="color: #a0a0a0; text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">ONLINE</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 900; color: #00d4ff; margin-bottom: 0.5rem;">∞</div>
+                    <div style="color: #a0a0a0; text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">CAPACITY</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 900; color: #8b5cf6; margin-bottom: 0.5rem;">0ms</div>
+                    <div style="color: #a0a0a0; text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">LATENCY</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 900; color: #00ff88; margin-bottom: 0.5rem;">100%</div>
+                    <div style="color: #a0a0a0; text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">UPTIME</div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate elements on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Add hover effects to buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px) scale(1.05)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

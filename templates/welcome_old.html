@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant_name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        .welcome-container { max-width: 600px; margin: 0 auto; }
+        h1 { color: #333; }
+        .links { margin-top: 30px; }
+        .links a { display: inline-block; margin: 10px; padding: 15px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .links a:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <h1>Welcome to {{ restaurant_name }}</h1>
+        <p>Your TablePulse system is ready!</p>
+        
+        <div class="links">
+            <a href="/business/login">Business Dashboard</a>
+            <a href="/client?table=1">Client View (Table 1)</a>
+        </div>
+    </div>
+</body>
+</html>

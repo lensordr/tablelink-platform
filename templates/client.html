@@ -3,63 +3,495 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Menu - Table {{ table_number }}</title>
+    <title>Room Service Portal - Room {{ room_number }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🍽️ {{ restaurant_name }}</h1>
-        <div id="table-info">
-            <h2>📍 Table <span id="table-number">{{ table_number or 'Not specified' }}</span></h2>
-            <p style="color: #718096; margin-top: 0.5rem;">Welcome! Browse our menu and place your order</p>
+        <div class="card" style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🛏️</div>
+            <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">ROOM {{ room_number }}</h1>
+            <p style="color: var(--text-gray); font-size: 1.2rem;">{{ hotel_name }} • Neural Service Portal</p>
         </div>
 
         <div id="menu-section" style="display: none;">
-            <h3>🍴 Our Menu</h3>
+            <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🍽️ SERVICE MATRIX</h2>
             <div id="menu-items"></div>
             
-            <div id="order-section">
-                <h3>🛒 Your Order</h3>
-                <div id="order-items"></div>
-                <div id="total">Total: $0.00</div>
+            <div id="order-section" class="card" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: var(--accent-neon);">🛒 YOUR ORDER</h3>
+                <div id="order-items" style="margin-bottom: 1.5rem;"></div>
+                <div id="total" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-neon); margin-bottom: 2rem; text-align: right;">Total: $0.00</div>
                 
                 <form id="order-form">
-                    <input type="hidden" id="table-number-input" name="table_number" value="{{ table_number }}">
+                    <input type="hidden" id="room-number-input" name="room_number" value="{{ room_number }}">
                     <div class="form-group">
-                        <label for="table-code">Enter 3-digit table code:</label>
-                        <input type="text" id="table-code" name="code" maxlength="3" pattern="[0-9]{3}" required>
+                        <label for="room-code">ROOM ACCESS CODE</label>
+                        <input type="text" id="room-code" name="code" maxlength="3" pattern="[0-9A-Z]{3}" required placeholder="Enter 3-digit code">
                     </div>
-                    <button type="submit" id="place-order-btn" disabled>Place Order</button>
+                    <button type="submit" id="place-order-btn" class="btn" disabled>TRANSMIT ORDER</button>
                 </form>
-                
-                <div id="checkout-section" style="display: none;">
-                    <h3>💳 Request Checkout</h3>
-                    <div class="tip-section">
-                        <h4>💰 Select Tip Amount</h4>
-                        <div class="tip-buttons">
-                            <button type="button" onclick="selectTip(0)" class="tip-btn" data-tip="0">No Tip</button>
-                            <button type="button" onclick="selectTip(10)" class="tip-btn" data-tip="10">10%</button>
-                            <button type="button" onclick="selectTip(15)" class="tip-btn" data-tip="15">15%</button>
-                            <button type="button" onclick="selectTip(20)" class="tip-btn" data-tip="20">20%</button>
-                            <button type="button" onclick="selectCustomTip()" class="tip-btn">Custom</button>
-                        </div>
-                        <input type="number" id="custom-tip" placeholder="Enter custom tip amount" style="display: none; margin-top: 10px; padding: 8px; width: 100%;">
-                        <div id="tip-display" style="margin-top: 10px; font-weight: bold;">Selected Tip: $0.00</div>
-                    </div>
-                    <div class="checkout-buttons">
-                        <button type="button" onclick="requestCheckout('cash')" class="checkout-btn cash-btn" disabled id="cash-btn">💵 Pay with Cash</button>
-                        <button type="button" onclick="requestCheckout('card')" class="checkout-btn card-btn" disabled id="card-btn">💳 Pay with Card</button>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div id="message"></div>
+        <div id="message" style="display: none;"></div>
     </div>
 
-    <script src="/static/client.js"></script>
+    <script>
+        let menu = [];
+        let order = [];
+        let roomNumber = {{ room_number }};
+        let roomCode = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMenu();
+            document.getElementById('order-form').addEventListener('submit', placeOrder);
+        });
+
+        async function loadMenu() {
+            try {
+                const response = await fetch(`/client/menu?room=${roomNumber}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    menu = data.menu;
+                    roomCode = data.room_code;
+                    displayMenu();
+                    document.getElementById('menu-section').style.display = 'block';
+                } else {
+                    showMessage(data.detail || 'Error loading menu', 'error');
+                }
+            } catch (error) {
+                showMessage('Connection error - Using offline menu', 'error');
+                // Show sample menu
+                menu = {
+                    "Appetizers": [
+                        {"id": 1, "name": "Caesar Salad", "ingredients": "Fresh romaine, parmesan, croutons", "price": 18.50}
+                    ],
+                    "Main Course": [
+                        {"id": 2, "name": "Grilled Salmon", "ingredients": "Atlantic salmon, lemon butter, vegetables", "price": 32.00}
+                    ],
+                    "Beverages": [
+                        {"id": 3, "name": "Coffee", "ingredients": "Freshly brewed premium coffee", "price": 6.00}
+                    ]
+                };
+                displayMenu();
+                document.getElementById('menu-section').style.display = 'block';
+            }
+        }
+
+        function displayMenu() {
+            const menuContainer = document.getElementById('menu-items');
+            menuContainer.innerHTML = '';
+            
+            Object.keys(menu).forEach(category => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'menu-category animate-in';
+                categoryDiv.innerHTML = `<h3 class="category-title">${category}</h3>`;
+                
+                const categoryItems = document.createElement('div');
+                categoryItems.className = 'category-items';
+                
+                menu[category].forEach(item => {
+                    const menuItemDiv = document.createElement('div');
+                    menuItemDiv.className = 'menu-item';
+                    menuItemDiv.innerHTML = `
+                        <h4>${item.name}</h4>
+                        <p class="ingredients">${item.ingredients}</p>
+                        <p class="price">$${item.price.toFixed(2)}</p>
+                        <div class="quantity-controls">
+                            <button type="button" onclick="updateQuantity(${item.id}, -1)">−</button>
+                            <span id="qty-${item.id}">0</span>
+                            <button type="button" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    `;
+                    categoryItems.appendChild(menuItemDiv);
+                });
+                
+                categoryDiv.appendChild(categoryItems);
+                menuContainer.appendChild(categoryDiv);
+            });
+        }
+
+        function updateQuantity(itemId, change) {
+            const qtyElement = document.getElementById(`qty-${itemId}`);
+            let currentQty = parseInt(qtyElement.textContent);
+            let newQty = Math.max(0, currentQty + change);
+            
+            qtyElement.textContent = newQty;
+            
+            // Update order array
+            const existingItem = order.find(item => item.product_id === itemId);
+            if (existingItem) {
+                if (newQty === 0) {
+                    order = order.filter(item => item.product_id !== itemId);
+                } else {
+                    existingItem.qty = newQty;
+                }
+            } else if (newQty > 0) {
+                order.push({ product_id: itemId, qty: newQty });
+            }
+            
+            updateOrderDisplay();
+        }
+
+        function updateOrderDisplay() {
+            const orderItemsContainer = document.getElementById('order-items');
+            const totalElement = document.getElementById('total');
+            const placeOrderBtn = document.getElementById('place-order-btn');
+            
+            orderItemsContainer.innerHTML = '';
+            let total = 0;
+            
+            order.forEach(orderItem => {
+                let menuItem = null;
+                Object.values(menu).forEach(categoryItems => {
+                    const found = categoryItems.find(item => item.id === orderItem.product_id);
+                    if (found) menuItem = found;
+                });
+                
+                if (menuItem) {
+                    const itemTotal = menuItem.price * orderItem.qty;
+                    total += itemTotal;
+                    
+                    const orderItemDiv = document.createElement('div');
+                    orderItemDiv.style.cssText = 'display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-light);';
+                    orderItemDiv.innerHTML = `
+                        <span>${menuItem.name} x${orderItem.qty}</span>
+                        <span style="color: var(--accent-neon); font-weight: 700;">$${itemTotal.toFixed(2)}</span>
+                    `;
+                    orderItemsContainer.appendChild(orderItemDiv);
+                }
+            });
+            
+            totalElement.textContent = `Total: $${total.toFixed(2)}`;
+            placeOrderBtn.disabled = order.length === 0;
+            
+            if (order.length === 0) {
+                placeOrderBtn.style.opacity = '0.5';
+                placeOrderBtn.style.cursor = 'not-allowed';
+            } else {
+                placeOrderBtn.style.opacity = '1';
+                placeOrderBtn.style.cursor = 'pointer';
+            }
+        }
+
+        async function placeOrder(event) {
+            event.preventDefault();
+            
+            const code = document.getElementById('room-code').value;
+            if (code.length !== 3) {
+                showMessage('Please enter a valid 3-digit access code', 'error');
+                return;
+            }
+            
+            if (order.length === 0) {
+                showMessage('Please select at least one item', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('place-order-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'TRANSMITTING...';
+            btn.disabled = true;
+            
+            try {
+                const formData = new FormData();
+                formData.append('room_number', roomNumber);
+                formData.append('code', code);
+                formData.append('items', JSON.stringify(order));
+                
+                const response = await fetch('/client/order', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(data.message, 'success');
+                    // Reset form
+                    order = [];
+                    document.getElementById('order-form').reset();
+                    document.querySelectorAll('[id^="qty-"]').forEach(el => el.textContent = '0');
+                    updateOrderDisplay();
+                } else {
+                    showMessage(data.detail || 'Error placing order', 'error');
+                }
+            } catch (error) {
+                showMessage('Connection error - Please try again', 'error');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = order.length === 0;
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate menu items on load
+            setTimeout(() => {
+                document.querySelectorAll('.menu-item').forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            }, 500);
+        });
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-neon: #00ff88;
+            --accent-blue: #00d4ff;
+            --accent-purple: #8b5cf6;
+            --text-light: #ffffff;
+            --text-gray: #a0a0a0;
+            --card-bg: #1e1e1e;
+            --border-glow: rgba(0, 255, 136, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                        var(--primary-dark);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .menu-category {
+            margin-bottom: 2rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--card-bg), rgba(255, 255, 255, 0.05));
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--accent-neon);
+        }
+
+        .category-items {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .menu-item {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-neon);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-item h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .ingredients {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-neon);
+            margin-bottom: 1rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 12px;
+        }
+
+        .quantity-controls button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            color: var(--primary-dark);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-controls button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .quantity-controls span {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-neon);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            color: var(--primary-dark);
+            text-decoration: none;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .message.success {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-neon);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .message.error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .menu-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </body>
 </html>

@@ -3,108 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - {{ restaurant_name }}</title>
+    <title>Access Terminal - {{ hotel_name }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style_new.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .login-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 2rem;
         }
-        .login-container {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
+
+        .terminal {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 
+                0 0 50px rgba(0, 255, 136, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
-        .logo {
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue), var(--accent-purple));
+            animation: scanline 2s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .terminal-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
         }
-        .logo h1 {
-            color: #333;
-            margin: 0;
-            font-size: 28px;
-        }
-        .logo p {
-            color: #666;
-            margin: 5px 0 0 0;
-            font-size: 14px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
+
+        .terminal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
             display: block;
-            margin-bottom: 5px;
-            color: #333;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .terminal-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .terminal-subtitle {
+            color: var(--text-gray);
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
-        input[type="text"], input[type="password"] {
+
+        .access-form {
+            margin-top: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-neon);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .input-group input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
         }
-        input[type="text"]:focus, input[type="password"]:focus {
+
+        .input-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--accent-neon);
+            box-shadow: 
+                0 0 0 3px rgba(0, 255, 136, 0.1),
+                0 0 20px rgba(0, 255, 136, 0.2);
+            background: rgba(0, 255, 136, 0.05);
         }
-        .login-btn {
+
+        .access-btn {
             width: 100%;
-            background: #667eea;
-            color: white;
-            padding: 12px;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            color: var(--primary-dark);
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .login-btn:hover {
-            background: #5a6fd8;
+
+        .access-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
         }
-        .error {
-            color: #dc3545;
-            margin-top: 10px;
+
+        .access-btn:hover::before {
+            left: 100%;
+        }
+
+        .access-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .access-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff6b6b;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            margin-top: 1rem;
             text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .system-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .system-info a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .system-info a:hover {
+            color: var(--accent-neon);
+        }
+
+        .loading {
+            opacity: 0.7;
+        }
+
+        .loading .access-btn {
+            background: var(--text-gray);
+            cursor: wait;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="logo">
-            <h1>{{ restaurant_name }}</h1>
-            <p>Business Dashboard</p>
+        <div class="terminal" id="terminal">
+            <div class="terminal-header">
+                <div class="terminal-icon">🔐</div>
+                <h1 class="terminal-title">ACCESS CONTROL</h1>
+                <p class="terminal-subtitle">NEXUS HOTEL SYSTEM</p>
+            </div>
+            
+            <form class="access-form" id="accessForm">
+                <div class="input-group">
+                    <label for="username">USER ID</label>
+                    <input type="text" id="username" name="username" required autocomplete="username" placeholder="Enter user identification">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">ACCESS CODE</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter access code">
+                </div>
+                
+                <button type="submit" class="access-btn" id="accessBtn">
+                    <span id="btnText">INITIALIZE ACCESS</span>
+                </button>
+                
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </form>
+
+            <div class="system-info">
+                <a href="/">← RETURN TO MAIN SYSTEM</a>
+            </div>
         </div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            
-            <button type="submit" class="login-btn">Login</button>
-            <div id="error" class="error" style="display: none;"></div>
-        </form>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('accessForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            const terminal = document.getElementById('terminal');
+            const accessBtn = document.getElementById('accessBtn');
+            const btnText = document.getElementById('btnText');
+            const errorDiv = document.getElementById('errorMessage');
+            
+            // Show loading state
+            terminal.classList.add('loading');
+            btnText.textContent = 'ACCESSING SYSTEM...';
+            errorDiv.style.display = 'none';
             
             const formData = new FormData();
             formData.append('username', document.getElementById('username').value);
@@ -119,25 +272,47 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    // Store token and redirect to correct restaurant dashboard
                     localStorage.setItem('access_token', data.access_token);
+                    btnText.textContent = 'ACCESS GRANTED';
                     
-                    // Check if we're in a /r/subdomain context
-                    const currentUrl = window.location.href;
-                    if (currentUrl.includes('/r/')) {
-                        const subdomain = currentUrl.split('/r/')[1].split('/')[0];
-                        window.location.href = `/r/${subdomain}/business/dashboard`;
-                    } else {
+                    // Success animation
+                    terminal.style.borderColor = 'var(--accent-neon)';
+                    terminal.style.boxShadow = '0 0 50px rgba(0, 255, 136, 0.5)';
+                    
+                    setTimeout(() => {
                         window.location.href = '/business/dashboard';
-                    }
+                    }, 1500);
                 } else {
-                    document.getElementById('error').textContent = data.detail || 'Login failed';
-                    document.getElementById('error').style.display = 'block';
+                    throw new Error(data.detail || 'Access denied');
                 }
             } catch (error) {
-                document.getElementById('error').textContent = 'Login failed';
-                document.getElementById('error').style.display = 'block';
+                terminal.classList.remove('loading');
+                btnText.textContent = 'INITIALIZE ACCESS';
+                errorDiv.textContent = 'ACCESS DENIED: ' + (error.message || 'Invalid credentials');
+                errorDiv.style.display = 'block';
+                
+                // Error animation
+                terminal.style.borderColor = 'rgba(255, 0, 0, 0.5)';
+                terminal.style.boxShadow = '0 0 50px rgba(255, 0, 0, 0.3)';
+                
+                setTimeout(() => {
+                    terminal.style.borderColor = 'rgba(0, 255, 136, 0.3)';
+                    terminal.style.boxShadow = '0 0 50px rgba(0, 255, 136, 0.1)';
+                }, 2000);
             }
+        });
+
+        // Add typing effect to inputs
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    this.style.borderColor = 'var(--accent-neon)';
+                    this.style.boxShadow = '0 0 10px rgba(0, 255, 136, 0.2)';
+                } else {
+                    this.style.borderColor = 'rgba(0, 255, 136, 0.3)';
+                    this.style.boxShadow = 'none';
+                }
+            });
         });
     </script>
 </body>

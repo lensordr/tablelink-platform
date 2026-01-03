@@ -18,7 +18,6 @@
             <button onclick="showSection('bookings')" class="nav-btn" id="bookings-btn">📋 BOOKINGS</button>
             <button onclick="showSection('room-management')" class="nav-btn" id="room-management-btn">🛌 ROOM MANAGEMENT</button>
             <button onclick="showSection('photos')" class="nav-btn" id="photos-btn">📸 PHOTOS</button>
-            <button onclick="showSection('settings')" class="nav-btn" id="settings-btn">⚙️ SETTINGS</button>
             <button onclick="showSection('staff')" class="nav-btn" id="staff-btn">👥 STAFF NETWORK</button>
             <button onclick="showSection('menu')" class="nav-btn" id="menu-btn">🍽️ MENU MATRIX</button>
             <button onclick="showSection('analytics')" class="nav-btn" id="analytics-btn">📊 DATA STREAM</button>
@@ -100,27 +99,51 @@
 
         <div id="bookings" class="section-content" style="display: none;">
             <div class="card">
-                <h2>📋 BOOKINGS</h2>
-                <div id="bookings-list"></div>
+                <h2>📋 BOOKING MANAGEMENT</h2>
+                <p style="color: var(--text-gray); margin-bottom: 2rem;">Manage room reservations and guest requests</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(0, 255, 136, 0.3);">
+                        <div style="font-size: 2rem; font-weight: 900; color: var(--accent-neon);">5</div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem;">PENDING</div>
+                    </div>
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(0, 212, 255, 0.3);">
+                        <div style="font-size: 2rem; font-weight: 900; color: var(--accent-blue);">12</div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem;">CONFIRMED</div>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(139, 92, 246, 0.3);">
+                        <div style="font-size: 2rem; font-weight: 900; color: var(--accent-purple);">8</div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem;">CHECKED IN</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>BOOKING REQUESTS</h3>
+                    <div id="bookings-list"></div>
+                </div>
             </div>
         </div>
 
         <div id="room-management" class="section-content" style="display: none;">
             <div class="card">
                 <h2>🛌 ROOM MANAGEMENT</h2>
+                <p style="color: var(--text-gray); margin-bottom: 2rem;">Add and manage room types for your hotel</p>
                 
                 <div style="background: rgba(0, 255, 136, 0.1); padding: 2rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(0, 255, 136, 0.3);">
                     <h3>ADD NEW ROOM TYPE</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
-                        <input type="text" id="new-room-type" placeholder="Room Type (e.g., Deluxe)" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                        <input type="number" id="new-room-price" placeholder="Price per night" step="0.01" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                        <input type="number" id="new-room-guests" placeholder="Max guests" min="1" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                        <input type="number" id="new-room-count" placeholder="Number of rooms" min="1" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                        <input type="number" id="new-room-start" placeholder="Starting room number" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                    </div>
-                    <input type="file" id="new-room-image" accept="image/*" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;">
-                    <textarea id="new-room-description" placeholder="Room description..." rows="2" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;"></textarea>
-                    <button onclick="addRoomType()" class="btn">ADD ROOM TYPE</button>
+                    <form id="add-room-type-form">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                            <input type="text" id="new-room-type" placeholder="Room Type (e.g., Deluxe)" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                            <input type="number" id="new-room-price" placeholder="Price per night" step="0.01" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                            <input type="number" id="new-room-guests" placeholder="Max guests" min="1" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                            <input type="number" id="new-room-count" placeholder="Number of rooms" min="1" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                            <input type="number" id="new-room-start" placeholder="Starting room number" required style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                        </div>
+                        <input type="file" id="new-room-image" accept="image/*" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;">
+                        <input type="url" id="new-room-image-url" placeholder="Or paste image URL" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;">
+                        <textarea id="new-room-description" placeholder="Room description..." rows="2" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;"></textarea>
+                        <button type="button" onclick="addRoomType()" class="btn">ADD ROOM TYPE</button>
+                    </form>
                 </div>
                 
                 <div>
@@ -133,6 +156,7 @@
         <div id="photos" class="section-content" style="display: none;">
             <div class="card">
                 <h2>📸 HOTEL PHOTOS</h2>
+                <p style="color: var(--text-gray); margin-bottom: 2rem;">Manage hotel images and room photos</p>
                 
                 <div style="background: rgba(0, 255, 136, 0.1); padding: 2rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(0, 255, 136, 0.3);">
                     <h3>HOTEL HEADER IMAGE</h3>
@@ -150,21 +174,34 @@
             </div>
         </div>
 
-        <div id="settings" class="section-content" style="display: none;">
-            <div class="card">
-                <h2>⚙️ HOTEL SETTINGS</h2>
-                
-                <div style="background: rgba(0, 255, 136, 0.1); padding: 2rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(0, 255, 136, 0.3);">
-                    <h3>HOTEL INFORMATION</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
-                        <input type="text" id="hotel-name" placeholder="Hotel Name" style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                        <input type="text" id="hotel-address" placeholder="Address" style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                        <input type="text" id="hotel-phone" placeholder="Phone" style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                        <input type="email" id="hotel-email" placeholder="Email" style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
-                    </div>
-                    <textarea id="hotel-description" placeholder="Hotel description..." rows="4" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;"></textarea>
-                    <button onclick="updateHotelInfo()" class="btn">UPDATE HOTEL INFO</button>
+        <div id="room-details-modal" class="modal" style="display: none;">
+            <div class="modal-content card">
+                <span class="close" onclick="closeRoomDetailsModal()">&times;</span>
+                <h2 id="room-details-title">ROOM DETAILS</h2>
+                <div id="room-photos-gallery" style="margin-bottom: 2rem;"></div>
+                <div id="room-details-info"></div>
+                <div style="margin-top: 2rem;">
+                    <h3>ADD MORE PHOTOS</h3>
+                    <input type="file" id="add-room-photo" accept="image/*" multiple style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;">
+                    <button onclick="addRoomPhotos()" class="btn">ADD PHOTOS</button>
                 </div>
+            </div>
+        </div>
+
+        <div id="edit-room-modal" class="modal" style="display: none;">
+            <div class="modal-content card">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h2>EDIT ROOM TYPE</h2>
+                <input type="hidden" id="edit-room-original-type">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                    <input type="text" id="edit-room-type" placeholder="Room Type" style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                    <input type="number" id="edit-room-price" placeholder="Price per night" step="0.01" style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                    <input type="number" id="edit-room-guests" placeholder="Max guests" min="1" style="padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light);">
+                </div>
+                <input type="file" id="edit-room-image" accept="image/*" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;">
+                <input type="url" id="edit-room-image-url" placeholder="Or paste image URL" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;">
+                <textarea id="edit-room-description" placeholder="Room description..." rows="2" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; color: var(--text-light); margin-bottom: 1rem;"></textarea>
+                <button onclick="updateRoomType()" class="btn">UPDATE ROOM TYPE</button>
             </div>
         </div>
 
@@ -236,6 +273,7 @@
 
     <script>
         let currentSection = 'rooms';
+        const hotelSubdomain = '{{ hotel_subdomain if hotel_subdomain else "" }}';
 
         function showSection(sectionId) {
             // Hide all sections
@@ -265,8 +303,8 @@
                 loadStaff();
             } else if (sectionId === 'menu') {
                 loadMenu();
-            } else if (sectionId === 'settings') {
-                loadHotelSettings();
+            } else if (sectionId === 'photos') {
+                loadPhotos();
             }
         }
 
@@ -275,7 +313,8 @@
 
         async function loadRooms() {
             try {
-                const response = await fetch('/business/rooms');
+                const url = hotelSubdomain ? `/business/rooms?hotel_subdomain=${hotelSubdomain}` : '/business/rooms';
+                const response = await fetch(url);
                 allRooms = await response.json();
             } catch (error) {
                 console.error('Error loading rooms:', error);
@@ -317,13 +356,13 @@
                 return matchesFloor && matchesStatus && matchesSearch;
             });
             
-            // Limit display to 150 rooms for performance
-            const displayRooms = filteredRooms.slice(0, 150);
+            // Limit display to 50 rooms for performance
+            const displayRooms = filteredRooms.slice(0, 50);
             
             const grid = document.getElementById('rooms-grid');
             const countEl = document.getElementById('room-count');
             
-            countEl.textContent = `(${displayRooms.length}${filteredRooms.length > 150 ? '+' : ''} of ${allRooms.length})`;
+            countEl.textContent = `(${displayRooms.length}${filteredRooms.length > 50 ? '+' : ''} of ${allRooms.length})`;
             
             grid.innerHTML = displayRooms.map(room => `
                 <div class="room-card-compact ${room.status}" onclick="showRoomDetails(${room.room_number})">
@@ -334,7 +373,8 @@
         }
 
         function loadPriorityOrders() {
-            fetch('/test/orders')
+            const url = hotelSubdomain ? `/business/orders?hotel_subdomain=${hotelSubdomain}` : '/business/orders';
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     const priorityList = document.getElementById('priority-list');
@@ -495,9 +535,157 @@
             }
         }
 
+        async function loadBookings() {
+            try {
+                const url = hotelSubdomain ? `/business/bookings?hotel_subdomain=${hotelSubdomain}` : '/business/bookings';
+                const response = await fetch(url);
+                const bookings = await response.json();
+                
+                const container = document.getElementById('bookings-list');
+                
+                if (bookings.length === 0) {
+                    container.innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">No booking requests</div>';
+                    return;
+                }
+                
+                container.innerHTML = bookings.map(booking => `
+                    <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <div style="font-weight: 700; color: var(--text-light); margin-bottom: 0.25rem;">${booking.guest_name}</div>
+                                <div style="color: var(--text-gray); font-size: 0.9rem;">${booking.guest_email}</div>
+                                <div style="color: var(--accent-blue); font-size: 0.9rem; margin-top: 0.25rem;">Room ${booking.room_number} • ${booking.total_nights} nights</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: var(--accent-neon); font-weight: 700; font-size: 1.2rem;">$${booking.total_price}</div>
+                                <div style="color: var(--text-gray); font-size: 0.8rem;">${booking.status.toUpperCase()}</div>
+                            </div>
+                        </div>
+                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            ${new Date(booking.check_in_date).toLocaleDateString()} - ${new Date(booking.check_out_date).toLocaleDateString()}
+                        </div>
+                        ${booking.status === 'pending' ? `
+                            <div style="display: flex; gap: 1rem;">
+                                <button onclick="updateBookingStatus(${booking.id}, 'confirmed')" style="background: var(--accent-neon); color: var(--primary-dark); padding: 0.5rem 1rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">CONFIRM</button>
+                                <button onclick="updateBookingStatus(${booking.id}, 'cancelled')" style="background: rgba(255, 0, 0, 0.2); color: #ff6b6b; border: 1px solid rgba(255, 0, 0, 0.3); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">CANCEL</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                document.getElementById('bookings-list').innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">Error loading bookings</div>';
+            }
+        }
+
+        function updateBookingStatus(bookingId, status) {
+            fetch(`/business/booking/${bookingId}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`Booking ${status} successfully!`);
+                loadBookings();
+            })
+            .catch(error => {
+                console.error('Error updating booking:', error);
+                alert('Error updating booking');
+            });
+        }
+        async function loadRoomTypes() {
+            try {
+                const url = hotelSubdomain ? `/business/room-types?hotel_subdomain=${hotelSubdomain}` : '/business/room-types';
+                const response = await fetch(url);
+                const roomTypes = await response.json();
+                
+                const container = document.getElementById('room-types-list');
+                
+                if (roomTypes.length === 0) {
+                    container.innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">No room types found.</div>';
+                    return;
+                }
+                
+                container.innerHTML = roomTypes.map(type => `
+                    <div onclick="showRoomDetails('${type.room_type}')" style="background: var(--card-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer;">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <div style="font-weight: 700; color: var(--text-light); margin-bottom: 0.25rem;">${type.room_type}</div>
+                                <div style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 0.5rem;">${type.description || 'No description'}</div>
+                                <div style="color: var(--accent-neon); font-weight: 700;">$${type.price_per_night}/night • ${type.max_guests} guests • ${type.total_rooms} rooms</div>
+                            </div>
+                            <button onclick="event.stopPropagation(); editRoomType('${type.room_type}', '${type.price_per_night}', '${type.max_guests}', '${(type.description || '').replace(/'/g, "&apos;")}')">EDIT</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading room types:', error);
+                document.getElementById('room-types-list').innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">Error loading room types</div>';
+            }
+        }
+
+        async function addRoomType() {
+            const imageFile = document.getElementById('new-room-image').files[0];
+            const imageUrlInput = document.getElementById('new-room-image-url').value;
+            let imageUrl = imageUrlInput;
+            
+            if (imageFile && !imageUrlInput) {
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                formData.append('upload_preset', 'hotel_images');
+                
+                try {
+                    const response = await fetch('https://api.cloudinary.com/v1_1/dzowvr6xu/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.secure_url) {
+                        imageUrl = data.secure_url;
+                    } else {
+                        alert('Image upload failed. Try using image URL instead.');
+                        return;
+                    }
+                } catch (error) {
+                    alert('Image upload failed. Try using image URL instead.');
+                    return;
+                }
+            }
+            
+            const formData = {
+                room_type: document.getElementById('new-room-type').value,
+                price_per_night: parseFloat(document.getElementById('new-room-price').value),
+                max_guests: parseInt(document.getElementById('new-room-guests').value),
+                room_count: parseInt(document.getElementById('new-room-count').value),
+                starting_room: parseInt(document.getElementById('new-room-start').value),
+                description: document.getElementById('new-room-description').value,
+                image_url: imageUrl
+            };
+            
+            const url = hotelSubdomain ? `/business/add-room-type?hotel_subdomain=${hotelSubdomain}` : '/business/add-room-type';
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(`Added ${formData.room_count} ${formData.room_type} rooms successfully!`);
+                document.getElementById('add-room-type-form').reset();
+                loadRoomTypes();
+            })
+            .catch(error => {
+                console.error('Error adding room type:', error);
+                alert('Error adding room type');
+            });
+        }
         async function loadStaff() {
             try {
-                const response = await fetch('/business/staff');
+                const url = hotelSubdomain ? `/business/staff?hotel_subdomain=${hotelSubdomain}` : '/business/staff';
+                const response = await fetch(url);
                 const staff = await response.json();
                 
                 const container = document.getElementById('staff-container');
@@ -542,7 +730,8 @@
 
         async function loadMenu() {
             try {
-                const response = await fetch('/business/menu');
+                const url = hotelSubdomain ? `/business/menu?hotel_subdomain=${hotelSubdomain}` : '/business/menu';
+                const response = await fetch(url);
                 const menuItems = await response.json();
                 
                 const container = document.getElementById('menu-items-list');
@@ -590,189 +779,17 @@
             }
         }
         
-        function toggleMenuItem(itemId, currentStatus) {
-            // This would make an API call to toggle the menu item status
-            alert(`Menu item ${currentStatus ? 'deactivated' : 'activated'}!`);
-            loadMenu(); // Reload to show updated status
-        }
-
-        const hotelSubdomain = '{{ hotel_subdomain if hotel_subdomain else "" }}';
-        
-        async function loadRoomTypes() {
-            const url = hotelSubdomain ? `/business/room-types?hotel_subdomain=${hotelSubdomain}` : '/business/room-types';
-            try {
-                const response = await fetch(url);
-                const roomTypes = await response.json();
-                document.getElementById('room-types-list').innerHTML = roomTypes.map((type, index) => `
-                    <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div>${type.room_type} - $${type.price_per_night}/night - ${type.total_rooms} rooms</div>
-                            <div style="color: var(--text-gray);">${type.description || 'No description'}</div>
-                        </div>
-                        <button onclick="editRoom(${index})" class="btn" style="padding: 0.5rem 1rem;">EDIT</button>
-                    </div>
-                `).join('');
-                window.roomTypesData = roomTypes;
-            } catch (error) {
-                document.getElementById('room-types-list').innerHTML = 'Error loading room types';
-            }
-        }
-        
-        async function addRoomType() {
-            const imageFile = document.getElementById('new-room-image').files[0];
-            let imageUrl = '';
-            
-            if (imageFile) {
-                const formData = new FormData();
-                formData.append('file', imageFile);
-                formData.append('upload_preset', 'hotel_images');
-                
-                try {
-                    const response = await fetch('https://api.cloudinary.com/v1_1/dzowvr6xu/image/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await response.json();
-                    imageUrl = data.secure_url;
-                } catch (error) {
-                    alert('Image upload failed');
-                    return;
-                }
-            }
-            
-            const roomData = {
-                room_type: document.getElementById('new-room-type').value,
-                price_per_night: parseFloat(document.getElementById('new-room-price').value),
-                max_guests: parseInt(document.getElementById('new-room-guests').value),
-                room_count: parseInt(document.getElementById('new-room-count').value),
-                starting_room: parseInt(document.getElementById('new-room-start').value),
-                description: document.getElementById('new-room-description').value,
-                image_url: imageUrl
-            };
-            
-            const url = hotelSubdomain ? `/business/add-room-type?hotel_subdomain=${hotelSubdomain}` : '/business/add-room-type';
-            try {
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(roomData)
-                });
-                alert('Room type added successfully!');
-                document.getElementById('new-room-type').value = '';
-                document.getElementById('new-room-price').value = '';
-                document.getElementById('new-room-guests').value = '';
-                document.getElementById('new-room-count').value = '';
-                document.getElementById('new-room-start').value = '';
-                document.getElementById('new-room-description').value = '';
-                document.getElementById('new-room-image').value = '';
-                loadRoomTypes();
-            } catch (error) {
-                alert('Error adding room type');
-            }
-        }
-        
-        function editRoom(index) {
-            const type = window.roomTypesData[index];
-            document.getElementById('new-room-type').value = type.room_type;
-            document.getElementById('new-room-price').value = type.price_per_night;
-            document.getElementById('new-room-guests').value = type.max_guests;
-            document.getElementById('new-room-description').value = type.description || '';
-            document.querySelector('#room-management .btn').textContent = 'UPDATE ROOM TYPE';
-            document.querySelector('#room-management .btn').onclick = () => updateRoomType(type.room_type);
-        }
-        
-        async function updateRoomType(originalType) {
-            const imageFile = document.getElementById('new-room-image').files[0];
-            let imageUrl = '';
-            
-            if (imageFile) {
-                const formData = new FormData();
-                formData.append('file', imageFile);
-                formData.append('upload_preset', 'hotel_images');
-                
-                try {
-                    const response = await fetch('https://api.cloudinary.com/v1_1/dzowvr6xu/image/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await response.json();
-                    imageUrl = data.secure_url;
-                } catch (error) {
-                    alert('Image upload failed');
-                    return;
-                }
-            }
-            
-            const roomData = {
-                original_room_type: originalType,
-                room_type: document.getElementById('new-room-type').value,
-                price_per_night: parseFloat(document.getElementById('new-room-price').value),
-                max_guests: parseInt(document.getElementById('new-room-guests').value),
-                description: document.getElementById('new-room-description').value,
-                image_url: imageUrl
-            };
-            
-            const url = hotelSubdomain ? `/business/update-room-type?hotel_subdomain=${hotelSubdomain}` : '/business/update-room-type';
-            try {
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(roomData)
-                });
-                alert('Room type updated successfully!');
-                resetForm();
-                loadRoomTypes();
-            } catch (error) {
-                alert('Error updating room type');
-            }
-        }
-        
-        function resetForm() {
-            document.getElementById('new-room-type').value = '';
-            document.getElementById('new-room-price').value = '';
-            document.getElementById('new-room-guests').value = '';
-            document.getElementById('new-room-count').value = '';
-            document.getElementById('new-room-start').value = '';
-            document.getElementById('new-room-description').value = '';
-            document.getElementById('new-room-image').value = '';
-            document.querySelector('#room-management .btn').textContent = 'ADD ROOM TYPE';
-            document.querySelector('#room-management .btn').onclick = addRoomType;
-        }
-        
-        async function loadHotelSettings() {
-            document.getElementById('hotel-name').value = 'REDMARBS';
-            document.getElementById('hotel-address').value = 'Marbella, Spain';
-            document.getElementById('hotel-phone').value = '333222555';
-            document.getElementById('hotel-email').value = 'info@redmarbs.com';
-            document.getElementById('hotel-description').value = 'Hotel REDMARBS is a boutique hotel...';
-        }
-        
-        async function updateHotelInfo() {
-            const hotelData = {
-                name: document.getElementById('hotel-name').value,
-                address: document.getElementById('hotel-address').value,
-                phone: document.getElementById('hotel-phone').value,
-                email: document.getElementById('hotel-email').value,
-                description: document.getElementById('hotel-description').value
-            };
-            
-            try {
-                await fetch('/business/update-hotel-info', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(hotelData)
-                });
-                alert('Hotel information updated successfully!');
-            } catch (error) {
-                alert('Error updating hotel information');
-            }
+        async function loadPhotos() {
+            // Load current photo URLs
         }
         
         async function uploadHeaderImage() {
-            const file = document.getElementById('header-image-file').files[0];
+            const fileInput = document.getElementById('header-image-file');
+            const file = fileInput.files[0];
             if (!file) return;
             
-            document.getElementById('header-upload-status').textContent = 'Uploading...';
+            const status = document.getElementById('header-upload-status');
+            status.textContent = 'Uploading...';
             
             const formData = new FormData();
             formData.append('file', file);
@@ -783,6 +800,7 @@
                     method: 'POST',
                     body: formData
                 });
+                
                 const data = await response.json();
                 
                 if (data.secure_url) {
@@ -792,18 +810,25 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ header_image_url: data.secure_url })
                     });
-                    document.getElementById('header-upload-status').textContent = 'Header uploaded successfully!';
+                    
+                    status.textContent = 'Header image uploaded successfully!';
+                    status.style.color = 'var(--accent-neon)';
+                } else {
+                    throw new Error('Upload failed');
                 }
             } catch (error) {
-                document.getElementById('header-upload-status').textContent = 'Upload failed';
+                status.textContent = 'Upload failed. Please try again.';
+                status.style.color = '#ff6b6b';
             }
         }
         
         async function uploadLogo() {
-            const file = document.getElementById('logo-file').files[0];
+            const fileInput = document.getElementById('logo-file');
+            const file = fileInput.files[0];
             if (!file) return;
             
-            document.getElementById('logo-upload-status').textContent = 'Uploading...';
+            const status = document.getElementById('logo-upload-status');
+            status.textContent = 'Uploading...';
             
             const formData = new FormData();
             formData.append('file', file);
@@ -814,6 +839,7 @@
                     method: 'POST',
                     body: formData
                 });
+                
                 const data = await response.json();
                 
                 if (data.secure_url) {
@@ -823,63 +849,184 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ logo_url: data.secure_url })
                     });
-                    document.getElementById('logo-upload-status').textContent = 'Logo uploaded successfully!';
+                    
+                    status.textContent = 'Logo uploaded successfully!';
+                    status.style.color = 'var(--accent-neon)';
+                } else {
+                    throw new Error('Upload failed');
                 }
             } catch (error) {
-                document.getElementById('logo-upload-status').textContent = 'Upload failed';
-            }
-        }
-
-        async function loadBookings() {
-            const url = hotelSubdomain ? `/business/bookings?hotel_subdomain=${hotelSubdomain}` : '/business/bookings';
-            try {
-                const response = await fetch(url);
-                const bookings = await response.json();
-                document.getElementById('bookings-list').innerHTML = bookings.map(booking => `
-                    <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                            <div>
-                                <div style="font-weight: 700; color: var(--text-light); margin-bottom: 0.25rem;">${booking.guest_name}</div>
-                                <div style="color: var(--text-gray); font-size: 0.9rem;">${booking.guest_email}</div>
-                                <div style="color: var(--accent-blue); font-size: 0.9rem; margin-top: 0.25rem;">Room ${booking.room_number} • ${booking.total_nights} nights</div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="color: var(--accent-neon); font-weight: 700; font-size: 1.2rem;">$${booking.total_price}</div>
-                                <div style="color: var(--text-gray); font-size: 0.8rem;">${booking.status.toUpperCase()}</div>
-                            </div>
-                        </div>
-                        <div style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
-                            ${new Date(booking.check_in_date).toLocaleDateString()} - ${new Date(booking.check_out_date).toLocaleDateString()}
-                        </div>
-                        ${booking.status === 'pending' ? `
-                            <div style="display: flex; gap: 1rem;">
-                                <button onclick="updateBookingStatus(${booking.id}, 'confirmed')" style="background: var(--accent-neon); color: var(--primary-dark); padding: 0.5rem 1rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">CONFIRM</button>
-                                <button onclick="updateBookingStatus(${booking.id}, 'cancelled')" style="background: rgba(255, 0, 0, 0.2); color: #ff6b6b; border: 1px solid rgba(255, 0, 0, 0.3); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">CANCEL</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `).join('');
-            } catch (error) {
-                document.getElementById('bookings-list').innerHTML = 'Error loading bookings';
+                status.textContent = 'Upload failed. Please try again.';
+                status.style.color = '#ff6b6b';
             }
         }
         
-        function updateBookingStatus(bookingId, status) {
-            fetch(`/business/booking/${bookingId}/status`, {
+        async function showRoomDetails(roomType) {
+            try {
+                // Simple room details without complex query
+                const roomTypes = await (await fetch(hotelSubdomain ? `/business/room-types?hotel_subdomain=${hotelSubdomain}` : '/business/room-types')).json();
+                const room = roomTypes.find(r => r.room_type === roomType);
+                
+                if (!room) {
+                    alert('Room not found');
+                    return;
+                }
+                
+                document.getElementById('room-details-title').textContent = `${roomType} ROOMS`;
+                
+                // Show basic photo (if exists)
+                const gallery = document.getElementById('room-photos-gallery');
+                gallery.innerHTML = '<div style="color: var(--text-gray);">No additional photos uploaded</div>';
+                
+                // Show room info
+                document.getElementById('room-details-info').innerHTML = `
+                    <div style="color: var(--text-light); margin-bottom: 1rem;">
+                        <strong>Price:</strong> $${room.price_per_night}/night<br>
+                        <strong>Max Guests:</strong> ${room.max_guests}<br>
+                        <strong>Total Rooms:</strong> ${room.total_rooms}<br>
+                        <strong>Description:</strong> ${room.description || 'No description'}
+                    </div>
+                `;
+                
+                document.getElementById('room-details-modal').style.display = 'flex';
+            } catch (error) {
+                alert('Error loading room details');
+            }
+        }
+        
+        function closeRoomDetailsModal() {
+            document.getElementById('room-details-modal').style.display = 'none';
+        }
+        
+        async function addRoomPhotos() {
+            const files = document.getElementById('add-room-photo').files;
+            if (files.length === 0) return;
+            
+            const roomType = document.getElementById('room-details-title').textContent.replace(' ROOMS', '');
+            const photoUrls = [];
+            
+            for (let file of files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'hotel_images');
+                
+                try {
+                    const response = await fetch('https://api.cloudinary.com/v1_1/dzowvr6xu/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.secure_url) {
+                        photoUrls.push(data.secure_url);
+                    }
+                } catch (error) {
+                    alert('Photo upload failed');
+                    return;
+                }
+            }
+            
+            // Save photos to database
+            const endpoint = hotelSubdomain ? `/business/add-room-photos?hotel_subdomain=${hotelSubdomain}` : '/business/add-room-photos';
+            fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: status })
+                body: JSON.stringify({ room_type: roomType, photos: photoUrls })
             })
             .then(response => response.json())
-            .then(data => {
-                alert(`Booking ${status} successfully!`);
-                loadBookings();
+            .then(result => {
+                alert('Photos added successfully!');
+                showRoomDetails(roomType); // Refresh
             })
             .catch(error => {
-                alert('Error updating booking');
+                alert('Error saving photos');
             });
         }
         
+        function editRoomType(roomType, price, guests, description) {
+            document.getElementById('edit-room-original-type').value = roomType;
+            document.getElementById('edit-room-type').value = roomType;
+            document.getElementById('edit-room-price').value = price;
+            document.getElementById('edit-room-guests').value = guests;
+            document.getElementById('edit-room-description').value = description;
+            document.getElementById('edit-room-modal').style.display = 'flex';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('edit-room-modal').style.display = 'none';
+        }
+        
+        function closeRoomDetailsModal() {
+            document.getElementById('room-details-modal').style.display = 'none';
+        }
+            document.getElementById('edit-room-original-type').value = roomType;
+            document.getElementById('edit-room-type').value = roomType;
+            document.getElementById('edit-room-price').value = price;
+            document.getElementById('edit-room-guests').value = guests;
+            document.getElementById('edit-room-description').value = description;
+            document.getElementById('edit-room-modal').style.display = 'flex';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('edit-room-modal').style.display = 'none';
+        }
+        
+        async function updateRoomType() {
+            const imageFile = document.getElementById('edit-room-image').files[0];
+            const imageUrlInput = document.getElementById('edit-room-image-url').value;
+            let imageUrl = imageUrlInput;
+            
+            if (imageFile && !imageUrlInput) {
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                formData.append('upload_preset', 'hotel_images');
+                
+                try {
+                    const response = await fetch('https://api.cloudinary.com/v1_1/dzowvr6xu/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.secure_url) {
+                        imageUrl = data.secure_url;
+                    }
+                } catch (error) {
+                    alert('Image upload failed');
+                    return;
+                }
+            }
+            
+            const updateData = {
+                original_room_type: document.getElementById('edit-room-original-type').value,
+                room_type: document.getElementById('edit-room-type').value,
+                price_per_night: parseFloat(document.getElementById('edit-room-price').value),
+                max_guests: parseInt(document.getElementById('edit-room-guests').value),
+                description: document.getElementById('edit-room-description').value,
+                image_url: imageUrl
+            };
+            
+            const url = hotelSubdomain ? `/business/update-room-type?hotel_subdomain=${hotelSubdomain}` : '/business/update-room-type';
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updateData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert('Room type updated successfully!');
+                closeEditModal();
+                loadRoomTypes();
+            })
+            .catch(error => {
+                alert('Error updating room type');
+            });
+        }
+        
+        function toggleMenuItem(itemId, currentStatus) {
+            // This would make an API call to toggle the menu item status
+            alert(`Menu item ${currentStatus ? 'deactivated' : 'activated'}!`);
+            loadMenu(); // Reload to show updated status
+        }
+
         function logout() {
             if (confirm('Disconnect from the control center?')) {
                 localStorage.removeItem('access_token');
@@ -890,28 +1037,130 @@
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
             loadRooms();
-            loadPriorityOrders(); // Add this line
             
             // Add filter event listeners
             document.getElementById('floor-filter').addEventListener('change', updateRoomDisplay);
             document.getElementById('status-filter').addEventListener('change', updateRoomDisplay);
             document.getElementById('room-search').addEventListener('input', updateRoomDisplay);
             
-            // Auto-refresh rooms every 30 seconds
+            // Auto-refresh and check for new activity every 10 seconds
             setInterval(() => {
                 if (currentSection === 'rooms') {
                     loadRooms();
-                } else if (currentSection === 'bookings') {
-                    loadBookings();
                 }
-            }, 30000);
+                checkForNewActivity();
+            }, 10000);
         });
+
+        // Check for new bookings and orders
+        async function checkForNewActivity() {
+            try {
+                // Check for new bookings
+                const bookingsResponse = await fetch('/business/bookings');
+                const bookings = await bookingsResponse.json();
+                const pendingBookings = bookings.filter(b => b.status === 'pending').length;
+                
+                // Check for new orders
+                const ordersResponse = await fetch('/test/orders');
+                const orders = await ordersResponse.json();
+                const activeOrders = orders.length;
+                
+                // Update tab badges
+                updateTabBadge('bookings-btn', pendingBookings);
+                updateTabBadge('rooms-btn', activeOrders);
+                
+                // Show notifications for new activity
+                if (pendingBookings > 0 && currentSection !== 'bookings') {
+                    showNotification(`${pendingBookings} new booking request${pendingBookings > 1 ? 's' : ''}!`, 'booking');
+                }
+                
+                if (activeOrders > 0 && currentSection !== 'rooms') {
+                    showNotification(`${activeOrders} active order${activeOrders > 1 ? 's' : ''} pending!`, 'order');
+                }
+                
+            } catch (error) {
+                console.error('Error checking for new activity:', error);
+            }
+        }
+
+        function updateTabBadge(tabId, count) {
+            const tab = document.getElementById(tabId);
+            let badge = tab.querySelector('.badge');
+            
+            if (count > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge';
+                    badge.style.cssText = 'background: #ff4757; color: white; border-radius: 50%; padding: 0.2rem 0.5rem; font-size: 0.7rem; margin-left: 0.5rem; font-weight: 700;';
+                    tab.appendChild(badge);
+                }
+                badge.textContent = count;
+            } else if (badge) {
+                badge.remove();
+            }
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'booking' ? 'var(--accent-blue)' : 'var(--accent-neon)'};
+                color: var(--primary-dark);
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                font-weight: 700;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                cursor: pointer;
+            `;
+            notification.textContent = message;
+            
+            // Add click handler to dismiss
+            notification.onclick = () => notification.remove();
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
 
         // Modal click outside to close
         document.getElementById('room-modal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
             }
+        });
+        
+        if (document.getElementById('edit-room-modal')) {
+            document.getElementById('edit-room-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEditModal();
+                }
+            });
+        }
+        
+        if (document.getElementById('room-details-modal')) {
+            document.getElementById('room-details-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeRoomDetailsModal();
+                }
+            });
+        }
+        
+        function logout() {
+            window.location.href = '/business/login';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRooms();
         });
     </script>
 
@@ -950,6 +1199,17 @@
 
         .close:hover {
             color: var(--accent-neon);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </body>

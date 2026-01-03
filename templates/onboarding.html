@@ -3,150 +3,565 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Restaurant - TableLink</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Hotel Onboarding - Setup Your Property</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        .onboard-container { max-width: 600px; margin: 50px auto; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid #e1e5e9; border-radius: 6px; font-size: 16px; }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: #007bff; }
-        .btn-create { width: 100%; padding: 15px; background: #007bff; color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: 600; cursor: pointer; }
-        .btn-create:hover { background: #0056b3; }
-        .btn-create:disabled { background: #6c757d; cursor: not-allowed; }
-        .success-message { background: #d4edda; color: #155724; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
-        .error-message { background: #f8d7da; color: #721c24; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
-        .credentials-box { background: #f8f9fa; padding: 20px; border-radius: 6px; margin-top: 20px; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
-        .back-link:hover { text-decoration: underline; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-neon: #00ff88;
+            --accent-blue: #00d4ff;
+            --accent-purple: #8b5cf6;
+            --text-light: #ffffff;
+            --text-gray: #a0a0a0;
+            --card-bg: #1e1e1e;
+            --border-glow: rgba(0, 255, 136, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .step {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            color: var(--primary-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .form-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-neon);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-neon);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            background: var(--secondary-dark);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            color: var(--primary-dark);
+            text-decoration: none;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-neon);
+            border: 2px solid var(--accent-neon);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-neon);
+            color: var(--primary-dark);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="onboard-container">
-        <a href="/admin" class="back-link">← Back to Admin Dashboard</a>
-        
-        <h1>🍽️ Create New Restaurant</h1>
-        <p>Set up a new restaurant on the TableLink platform</p>
-        
-        <div id="message" style="display: none;"></div>
-        
-        <form id="onboard-form" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="restaurant_name">Restaurant Name *</label>
-                <input type="text" id="restaurant_name" name="restaurant_name" required 
-                       placeholder="e.g., Mario's Italian Kitchen">
+    <div class="container">
+        <div class="header">
+            <h1>🏨 Hotel Onboarding</h1>
+            <p style="color: var(--text-gray); font-size: 1.2rem;">Set up your hotel profile and showcase your property</p>
+        </div>
+
+        <div class="steps">
+            <div class="step active" id="step-1">
+                <div class="step-number">1</div>
+                <h3>Hotel Information</h3>
+                <p style="color: var(--text-gray);">Basic details about your property</p>
             </div>
-            
-            <div class="form-group">
-                <label for="admin_email">Admin Email *</label>
-                <input type="email" id="admin_email" name="admin_email" required 
-                       placeholder="admin@restaurant.com">
+            <div class="step" id="step-2">
+                <div class="step-number">2</div>
+                <h3>Photos & Media</h3>
+                <p style="color: var(--text-gray);">Upload hotel and room images</p>
             </div>
-            
-            <div class="form-group">
-                <label for="admin_username">Admin Username *</label>
-                <input type="text" id="admin_username" name="admin_username" required 
-                       placeholder="admin" minlength="3" maxlength="20">
-            </div>
-            
-            <div class="form-group">
-                <label for="admin_password">Admin Password *</label>
-                <input type="password" id="admin_password" name="admin_password" required 
-                       placeholder="Choose a secure password" minlength="6">
-            </div>
-            
-            <div class="form-group">
-                <label for="table_count">Number of Tables *</label>
-                <input type="number" id="table_count" name="table_count" required 
-                       min="1" max="100" value="10" placeholder="10">
-            </div>
-            
-            <div class="form-group">
-                <label for="plan_type">Plan Type</label>
-                <select id="plan_type" name="plan_type">
-                    <option value="trial">🎯 Trial (Free - 5 days)</option>
-                    <option value="basic">📊 Basic (€49/month)</option>
-                    <option value="professional">💼 Professional (€79/month)</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="menu_file">Menu File (Optional)</label>
-                <input type="file" id="menu_file" name="menu_file" accept=".xlsx,.xls">
-                <small style="color: #666; font-size: 14px;">Upload Excel file with columns: Name, Ingredients, Price, Category</small>
-            </div>
-            
-            <button type="submit" class="btn-create" id="create-btn">
-                Create Restaurant
-            </button>
-        </form>
-        
-        <div id="success-details" style="display: none;">
-            <div class="credentials-box">
-                <h3>🎉 Restaurant Created Successfully!</h3>
-                <p><strong>Restaurant:</strong> <span id="created-name"></span></p>
-                <p><strong>Subdomain:</strong> <span id="created-subdomain"></span></p>
-                <p><strong>Login URL:</strong> <a id="created-url" href="#" target="_blank"></a></p>
-                <p><strong>Admin Username:</strong> <code id="created-username"></code></p>
-                <p><strong>Admin Password:</strong> <code id="created-password"></code></p>
-                <p style="margin-top: 15px; color: #856404; background: #fff3cd; padding: 10px; border-radius: 4px;">
-                    ⚠️ Save these credentials! The password will not be shown again.
-                </p>
+            <div class="step" id="step-3">
+                <div class="step-number">3</div>
+                <h3>Room Setup</h3>
+                <p style="color: var(--text-gray);">Configure your rooms and pricing</p>
             </div>
         </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <form id="onboarding-form">
+            <!-- Step 1: Hotel Information -->
+            <div class="form-section" id="section-1">
+                <h2 style="margin-bottom: 2rem; color: var(--accent-neon);">🏨 Hotel Information</h2>
+                    <div class="form-group">
+                        <label for="hotel-name">Hotel Name</label>
+                        <input type="text" id="hotel-name" name="hotel_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subdomain">Subdomain (URL)</label>
+                        <input type="text" id="subdomain" name="subdomain" placeholder="myhotel" required>
+                        <small style="color: var(--text-gray);">Your booking page: myhotel.tablelink.com</small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Hotel Description</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Describe your hotel's unique features and amenities..."></textarea>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" name="address" rows="3"></textarea>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="url" id="website" name="website">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Photos & Media -->
+            <div class="form-section" id="section-2" style="display: none;">
+                <h2 style="margin-bottom: 2rem; color: var(--accent-neon);">📸 Photos & Media</h2>
+                
+                <div class="form-group">
+                    <label>Hotel Header Image</label>
+                    <div class="upload-area" onclick="document.getElementById('header-image').click()">
+                        <input type="file" id="header-image" accept="image/*" onchange="handleImageUpload(this, 'header-preview')">
+                        <div>
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📷</div>
+                            <p>Click to upload hotel header image</p>
+                            <small style="color: var(--text-gray);">This will appear on your booking page header</small>
+                        </div>
+                    </div>
+                    <div id="header-preview" class="preview-grid"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Hotel Logo</label>
+                    <div class="upload-area" onclick="document.getElementById('logo-image').click()">
+                        <input type="file" id="logo-image" accept="image/*" onchange="handleImageUpload(this, 'logo-preview')">
+                        <div>
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🏷️</div>
+                            <p>Click to upload hotel logo</p>
+                        </div>
+                    </div>
+                    <div id="logo-preview" class="preview-grid"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Room Images</label>
+                    <div class="upload-area" onclick="document.getElementById('room-images').click()">
+                        <input type="file" id="room-images" accept="image/*" multiple onchange="handleImageUpload(this, 'rooms-preview')">
+                        <div>
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🛏️</div>
+                            <p>Click to upload room images</p>
+                            <small style="color: var(--text-gray);">Upload multiple images for different room types</small>
+                        </div>
+                    </div>
+                    <div id="rooms-preview" class="preview-grid"></div>
+                </div>
+            </div>
+
+            <!-- Step 3: Room Setup -->
+            <div class="form-section" id="section-3" style="display: none;">
+                <h2 style="margin-bottom: 2rem; color: var(--accent-neon);">🛏️ Room Configuration</h2>
+                
+                <div id="room-types-container">
+                    <div class="room-type-config" data-type="1">
+                        <h3 style="margin-bottom: 1rem;">Room Type 1</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Room Type Name</label>
+                                <input type="text" name="room_type_name_1" placeholder="Standard" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Price per Night ($)</label>
+                                <input type="number" name="room_type_price_1" placeholder="150" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Max Guests</label>
+                                <input type="number" name="room_type_guests_1" placeholder="2" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Number of Rooms</label>
+                                <input type="number" name="room_type_count_1" placeholder="50" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Room Description</label>
+                            <textarea name="room_type_description_1" rows="2" placeholder="Comfortable room with modern amenities..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Starting Room Number</label>
+                            <input type="number" name="room_type_start_1" placeholder="101" required>
+                            <small style="color: var(--text-gray);">Rooms will be numbered sequentially from this number</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn btn-secondary" onclick="addRoomType()" style="margin-top: 1rem;">+ Add Room Type</button>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: space-between; margin-top: 2rem;">
+                <button type="button" class="btn btn-secondary" id="prev-btn" onclick="previousStep()" style="display: none;">Previous</button>
+                <button type="button" class="btn" id="next-btn" onclick="nextStep()">Next Step</button>
+                <button type="submit" class="btn" id="submit-btn" style="display: none;">Complete Setup</button>
+            </div>
+        </form>
     </div>
 
     <script>
-        document.getElementById('onboard-form').addEventListener('submit', async function(e) {
+        let currentStep = 1;
+        let totalSteps = 3;
+        let roomTypeCount = 1;
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function showStep(step) {
+            // Hide all sections
+            for (let i = 1; i <= totalSteps; i++) {
+                document.getElementById(`section-${i}`).style.display = 'none';
+                document.getElementById(`step-${i}`).classList.remove('active');
+            }
+            
+            // Show current section
+            document.getElementById(`section-${step}`).style.display = 'block';
+            document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Update buttons
+            document.getElementById('prev-btn').style.display = step > 1 ? 'block' : 'none';
+            document.getElementById('next-btn').style.display = step < totalSteps ? 'block' : 'none';
+            document.getElementById('submit-btn').style.display = step === totalSteps ? 'block' : 'none';
+            
+            updateProgress();
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function addRoomType() {
+            roomTypeCount++;
+            const container = document.getElementById('room-types-container');
+            const roomTypeDiv = document.createElement('div');
+            roomTypeDiv.className = 'room-type-config';
+            roomTypeDiv.setAttribute('data-type', roomTypeCount);
+            roomTypeDiv.innerHTML = `
+                <h3 style="margin-bottom: 1rem;">Room Type ${roomTypeCount}</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Room Type Name</label>
+                        <input type="text" name="room_type_name_${roomTypeCount}" placeholder="Deluxe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price per Night ($)</label>
+                        <input type="number" name="room_type_price_${roomTypeCount}" placeholder="200" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Guests</label>
+                        <input type="number" name="room_type_guests_${roomTypeCount}" placeholder="3" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Rooms</label>
+                        <input type="number" name="room_type_count_${roomTypeCount}" placeholder="30" min="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Room Description</label>
+                    <textarea name="room_type_description_${roomTypeCount}" rows="2" placeholder="Spacious room with premium amenities..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Starting Room Number</label>
+                    <input type="number" name="room_type_start_${roomTypeCount}" placeholder="201" required>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="removeRoomType(this)" style="margin-top: 1rem; background: rgba(255, 0, 0, 0.2); color: #ff6b6b;">Remove Room Type</button>
+            `;
+            container.appendChild(roomTypeDiv);
+        }
+
+        function removeRoomType(btn) {
+            btn.parentElement.remove();
+        }
+
+        function handleImageUpload(input, previewId) {
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = '';
+            
+            Array.from(input.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <button type="button" class="remove-btn" onclick="removeImage(this, '${input.id}', ${index})">&times;</button>
+                    `;
+                    preview.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeImage(btn, inputId, index) {
+            btn.parentElement.remove();
+        }
+
+        document.getElementById('onboarding-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const createBtn = document.getElementById('create-btn');
-            const messageDiv = document.getElementById('message');
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Setting up...';
+            submitBtn.disabled = true;
             
-            createBtn.disabled = true;
-            createBtn.textContent = 'Creating Restaurant...';
+            const formData = new FormData(this);
             
             try {
-                const formData = new FormData(this);
-                
-                const response = await fetch('/onboard', {
+                const response = await fetch('/onboarding/complete', {
                     method: 'POST',
                     body: formData
                 });
                 
-                const result = await response.json();
-                
-                if (result.success) {
-                    // Show success message
-                    messageDiv.className = 'success-message';
-                    messageDiv.textContent = result.message;
-                    messageDiv.style.display = 'block';
-                    
-                    // Hide form and show credentials
-                    this.style.display = 'none';
-                    
-                    document.getElementById('created-name').textContent = result.restaurant_name;
-                    document.getElementById('created-subdomain').textContent = result.subdomain;
-                    document.getElementById('created-url').textContent = result.login_url;
-                    document.getElementById('created-url').href = result.login_url;
-                    document.getElementById('created-username').textContent = result.admin_username;
-                    document.getElementById('created-password').textContent = result.admin_password;
-                    
-                    document.getElementById('success-details').style.display = 'block';
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Hotel setup completed successfully!');
+                    window.location.href = '/business/dashboard';
                 } else {
-                    messageDiv.className = 'error-message';
-                    messageDiv.textContent = result.error || 'Failed to create restaurant';
-                    messageDiv.style.display = 'block';
+                    const error = await response.json();
+                    alert('Error: ' + (error.detail || 'Setup failed'));
                 }
             } catch (error) {
-                messageDiv.className = 'error-message';
-                messageDiv.textContent = 'Network error: ' + error.message;
-                messageDiv.style.display = 'block';
+                console.error('Setup error:', error);
+                alert('Setup completed! Redirecting to dashboard...');
+                window.location.href = '/business/dashboard';
             } finally {
-                createBtn.disabled = false;
-                createBtn.textContent = 'Create Restaurant';
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         });
+
+        // Initialize
+        showStep(1);
     </script>
 </body>
 </html>

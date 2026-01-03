@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ hotel_name }} - Luxury Hotel Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-neon: #00ff88;
+            --accent-blue: #00d4ff;
+            --accent-purple: #8b5cf6;
+            --text-light: #ffffff;
+            --text-gray: #a0a0a0;
+            --card-bg: #1e1e1e;
+            --border-glow: rgba(0, 255, 136, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), 
+                        url('{{ hotel_header_image or "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><rect fill='%23111' width='1200' height='800'/><circle cx='300' cy='200' r='100' fill='%23001122' opacity='0.3'/><circle cx='900' cy='600' r='150' fill='%23002211' opacity='0.2'/></svg>" }}');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            color: var(--primary-dark);
+            text-decoration: none;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-neon);
+            border: 2px solid var(--accent-neon);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-neon);
+            color: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .room-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .room-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-neon);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .room-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--secondary-dark), var(--card-bg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--accent-neon);
+        }
+
+        .room-content {
+            padding: 2rem;
+        }
+
+        .room-type {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .room-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-neon);
+            margin-bottom: 1rem;
+        }
+
+        .room-description {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+
+        .room-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .amenity-tag {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-neon);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-gray);
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: var(--accent-neon);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-neon);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .booking-summary {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .rooms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>{{ hotel_name }}</h1>
+            <p>{{ hotel_description or "Experience Luxury in the Digital Age" }}</p>
+            <div class="cta-buttons">
+                <a href="#rooms" class="btn">Book Your Stay</a>
+                <a href="/room/101" class="btn btn-secondary">Order Room Service</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Section -->
+    <section id="rooms" class="section">
+        <div class="container">
+            <h2>🏨 Available Rooms</h2>
+            <div id="rooms-grid" class="rooms-grid"></div>
+        </div>
+    </section>
+
+    <!-- Room Details Modal -->
+    <div id="room-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRoomDetailsModal()">&times;</span>
+            <h2 id="room-details-title">Room Details</h2>
+            <div id="room-photos-gallery" style="margin-bottom: 2rem;"></div>
+            <div id="room-details-info"></div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBookingModal()">&times;</span>
+            <h2>📋 Book Your Room</h2>
+            <form id="booking-form">
+                <input type="hidden" id="selected-room-type" name="room_type">
+                
+                <div class="form-group">
+                    <label for="guest-name">Guest Name</label>
+                    <input type="text" id="guest-name" name="guest_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="guest-email">Email</label>
+                    <input type="email" id="guest-email" name="guest_email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="guest-phone">Phone</label>
+                    <input type="tel" id="guest-phone" name="guest_phone">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="check-in">Check-in Date</label>
+                        <input type="date" id="check-in" name="check_in_date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="check-out">Check-out Date</label>
+                        <input type="date" id="check-out" name="check_out_date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="special-requests">Special Requests</label>
+                    <textarea id="special-requests" name="special_requests" rows="3" placeholder="Any special requirements or requests..."></textarea>
+                </div>
+                
+                <div id="booking-summary" class="booking-summary" style="display: none;">
+                    <h3>Booking Summary</h3>
+                    <div id="summary-details"></div>
+                </div>
+                
+                <button type="submit" class="btn" style="width: 100%;">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let selectedRoom = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRooms();
+            setupDateValidation();
+        });
+
+        async function loadRooms() {
+            try {
+                const hotelSubdomain = window.location.pathname.split('/')[2]; // Extract subdomain from URL
+                const response = await fetch(`/api/public/rooms?hotel_subdomain=${hotelSubdomain}`);
+                const rooms = await response.json();
+                
+                const grid = document.getElementById('rooms-grid');
+                
+                if (!rooms || rooms.length === 0) {
+                    grid.innerHTML = '<div style="text-align: center; color: var(--text-gray); padding: 2rem;">No rooms available at the moment. Please check back later.</div>';
+                    return;
+                }
+                
+                grid.innerHTML = rooms.map(roomType => `
+                    <div class="room-card" onclick="showRoomDetails('${roomType.room_type}')">
+                        <div class="room-image" style="background-image: url('${roomType.image_url || ''}'); background-size: cover; background-position: center;">
+                            ${roomType.image_url ? '' : '🏨'}
+                        </div>
+                        <div class="room-content">
+                            <div class="room-type">${roomType.room_type}</div>
+                            <div class="room-price">$${roomType.price_per_night}/night</div>
+                            <div class="room-description">${roomType.description}</div>
+                            <div style="background: rgba(0, 255, 136, 0.1); padding: 0.75rem; border-radius: 8px; margin: 1rem 0; text-align: center; border: 1px solid rgba(0, 255, 136, 0.3);">
+                                <div style="color: var(--accent-neon); font-weight: 700; font-size: 1.1rem;">${roomType.available_rooms} Available</div>
+                                <div style="color: var(--text-gray); font-size: 0.9rem;">of ${roomType.total_rooms} rooms</div>
+                            </div>
+                            <div class="room-amenities">
+                                ${roomType.amenities.split(',').map(amenity => `<span class="amenity-tag">${amenity.trim()}</span>`).join('')}
+                                <span class="amenity-tag">${roomType.max_guests} Guests</span>
+                            </div>
+                            <button class="btn" onclick="event.stopPropagation(); openBookingModal('${roomType.room_type}', ${roomType.price_per_night})" 
+                                    style="width: 100%;" ${roomType.available_rooms === 0 ? 'disabled' : ''}>
+                                ${roomType.available_rooms > 0 ? 'Book Now' : 'Fully Booked'}
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading rooms:', error);
+                document.getElementById('rooms-grid').innerHTML = '<div style="text-align: center; color: var(--text-gray); padding: 2rem;">Error loading rooms. Please refresh the page.</div>';
+            }
+        }
+
+        async function showRoomDetails(roomType) {
+            try {
+                const hotelSubdomain = window.location.pathname.split('/')[2];
+                const response = await fetch(`/api/public/rooms?hotel_subdomain=${hotelSubdomain}`);
+                const rooms = await response.json();
+                const room = rooms.find(r => r.room_type === roomType);
+                
+                if (!room) {
+                    alert('Room not found');
+                    return;
+                }
+                
+                document.getElementById('room-details-title').textContent = `${roomType} Room`;
+                
+                // Show photos
+                const gallery = document.getElementById('room-photos-gallery');
+                if (room.image_url) {
+                    gallery.innerHTML = `<img src="${room.image_url}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px;">`;
+                } else {
+                    gallery.innerHTML = '<div style="color: var(--text-gray); text-align: center; padding: 2rem;">No photos available</div>';
+                }
+                
+                // Show room info
+                document.getElementById('room-details-info').innerHTML = `
+                    <div style="color: var(--text-light); margin-bottom: 1rem;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-neon); margin-bottom: 1rem;">$${room.price_per_night}/night</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Max Guests:</strong> ${room.max_guests}</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Available Rooms:</strong> ${room.available_rooms} of ${room.total_rooms}</div>
+                        <div style="margin-bottom: 1rem;"><strong>Description:</strong> ${room.description || 'No description available'}</div>
+                        <div style="margin-bottom: 1rem;"><strong>Amenities:</strong></div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            ${room.amenities.split(',').map(amenity => `<span class="amenity-tag">${amenity.trim()}</span>`).join('')}
+                        </div>
+                    </div>
+                    <button class="btn" onclick="closeRoomDetailsModal(); openBookingModal('${room.room_type}', ${room.price_per_night})" style="width: 100%; margin-top: 1rem;">
+                        Book This Room
+                    </button>
+                `;
+                
+                document.getElementById('room-details-modal').style.display = 'flex';
+            } catch (error) {
+                alert('Error loading room details');
+            }
+        }
+        
+        function closeRoomDetailsModal() {
+            document.getElementById('room-details-modal').style.display = 'none';
+        }
+
+        function openBookingModal(roomType, pricePerNight) {
+            selectedRoom = { type: roomType, price: pricePerNight };
+            document.getElementById('selected-room-type').value = roomType;
+            document.getElementById('booking-modal').style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').style.display = 'none';
+            selectedRoom = null;
+        }
+
+        function setupDateValidation() {
+            const checkIn = document.getElementById('check-in');
+            const checkOut = document.getElementById('check-out');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            checkIn.min = today;
+            checkOut.min = today;
+            
+            checkIn.addEventListener('change', function() {
+                checkOut.min = this.value;
+                updateBookingSummary();
+            });
+            
+            checkOut.addEventListener('change', updateBookingSummary);
+        }
+
+        function updateBookingSummary() {
+            const checkIn = document.getElementById('check-in').value;
+            const checkOut = document.getElementById('check-out').value;
+            
+            if (checkIn && checkOut && selectedRoom) {
+                const nights = Math.ceil((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
+                if (nights > 0) {
+                    const total = nights * selectedRoom.price;
+                    
+                    document.getElementById('summary-details').innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>${selectedRoom.type}</span>
+                            <span>$${selectedRoom.price}/night</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>${nights} nights</span>
+                            <span>$${total}</span>
+                        </div>
+                        <hr style="border: 1px solid rgba(0, 255, 136, 0.3); margin: 1rem 0;">
+                        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.2rem;">
+                            <span>Total</span>
+                            <span style="color: var(--accent-neon);">$${total}</span>
+                        </div>
+                    `;
+                    
+                    document.getElementById('booking-summary').style.display = 'block';
+                }
+            }
+        }
+
+        document.getElementById('booking-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const bookingData = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/api/public/book-room', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Booking request submitted successfully! We will contact you shortly to confirm.');
+                    closeBookingModal();
+                    this.reset();
+                } else {
+                    alert('Error: ' + (result.detail || 'Booking failed'));
+                }
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('Error submitting booking. Please try again.');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
